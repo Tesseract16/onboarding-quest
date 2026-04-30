@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🎮 Onboarding Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #22223a;
+  --accent-primary: #f72585;
+  --accent-secondary: #7209b7;
+  --accent-tertiary: #4cc9f0;
+  --accent-gold: #ffd166;
+  --accent-green: #06d6a0;
+  --text-primary: #edf2f4;
+  --text-secondary: #8d99ae;
+  --text-muted: #555b6e;
+  --gradient-hero: linear-gradient(135deg, #f72585 0%, #7209b7 50%, #4361ee 100%);
+  --gradient-card: linear-gradient(145deg, #1a1a2e, #16213e);
+  --gradient-success: linear-gradient(135deg, #06d6a0, #118ab2);
+  --shadow-glow: 0 0 40px rgba(247,37,133,0.15);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.4);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Fredoka', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(247,37,133,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(76,201,240,0.08) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(114,9,183,0.05) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+.container { max-width: 480px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; gap: 16px; }
+.loader { width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: var(--text-secondary); font-size: 0.9rem; }
+.error-box { background: rgba(247,37,133,0.1); border: 1px solid rgba(247,37,133,0.3); border-radius: var(--radius-sm); padding: 16px; margin-top: 12px; text-align: left; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; max-width: 380px; }
+.error-box code { font-family: 'Space Mono', monospace; font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; }
+.header { text-align: center; padding: 30px 0 20px; }
+.header-logo { font-size: 2.4rem; font-weight: 700; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+.header-sub { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); margin-top: 6px; letter-spacing: 3px; text-transform: uppercase; }
+.player-card { background: var(--gradient-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 20px; margin: 16px 0; box-shadow: var(--shadow-card); position: relative; overflow: hidden; }
+.player-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-hero); }
+.player-info { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.player-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--gradient-hero); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; box-shadow: 0 0 20px rgba(247,37,133,0.3); }
+.player-name { font-size: 1.15rem; font-weight: 600; }
+.player-title { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent-tertiary); text-transform: uppercase; letter-spacing: 2px; margin-top: 2px; }
+.stats-row { display: flex; gap: 10px; }
+.stat-box { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.stat-value { font-size: 1.4rem; font-weight: 700; color: var(--accent-gold); }
+.stat-value.badges { color: var(--accent-green); }
+.stat-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+.progress-section { margin: 16px 0; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.progress-label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
+.progress-pct { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--accent-primary); font-weight: 700; }
+.progress-track { width: 100%; height: 10px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--gradient-hero); border-radius: 100px; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); position: relative; }
+.progress-fill::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 30px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3)); border-radius: 100px; }
+.scan-hint { text-align: center; padding: 24px; margin: 16px 0; background: rgba(247,37,133,0.05); border: 1px dashed rgba(247,37,133,0.2); border-radius: var(--radius); }
+.scan-hint-icon { font-size: 2rem; margin-bottom: 8px; }
+.scan-hint-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+.section-title { font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+.section-title span { font-size: 1.2rem; }
+.stations-grid { display: flex; flex-direction: column; gap: 10px; }
+.station-card { background: var(--gradient-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.station-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+.station-card.completed { border-color: rgba(6,214,160,0.2); }
+.station-card.completed::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-success); }
+.station-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; background: rgba(255,255,255,0.04); }
+.station-card.completed .station-icon { background: rgba(6,214,160,0.1); }
+.station-details { flex: 1; min-width: 0; }
+.station-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+.station-hint { font-size: 0.75rem; color: var(--text-muted); }
+.station-xp { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--accent-gold); font-weight: 700; background: rgba(255,209,102,0.1); padding: 3px 8px; border-radius: 100px; }
+.badges-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+.badge { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; position: relative; transition: all 0.3s; }
+.badge.earned { border-color: var(--accent-gold); background: rgba(255,209,102,0.1); box-shadow: 0 0 16px rgba(255,209,102,0.2); }
+.badge.locked { filter: grayscale(1) opacity(0.3); }
+.badge-label { position: absolute; bottom: -18px; font-size: 0.5rem; font-family: 'Space Mono', monospace; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,15,26,0.92); backdrop-filter: blur(12px); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 440px; box-shadow: 0 24px 80px rgba(0,0,0,0.6); position: relative; animation: modal-in 0.4s cubic-bezier(0.22,1,0.36,1); }
+@keyframes modal-in { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+.modal-station-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.modal-station-name { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent-tertiary); text-transform: uppercase; letter-spacing: 3px; }
+.modal-question { font-size: 1.15rem; font-weight: 600; line-height: 1.4; margin: 12px 0 20px; }
+.modal-lore { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; padding: 12px; background: rgba(255,255,255,0.02); border-left: 3px solid var(--accent-secondary); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.answers-list { display: flex; flex-direction: column; gap: 8px; }
+.answer-btn { width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Fredoka', sans-serif; font-size: 0.9rem; text-align: left; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 12px; }
+.answer-btn:hover { background: rgba(247,37,133,0.08); border-color: rgba(247,37,133,0.2); transform: translateX(4px); }
+.answer-btn .answer-key { font-family: 'Space Mono', monospace; font-size: 0.65rem; font-weight: 700; color: var(--accent-primary); background: rgba(247,37,133,0.1); width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.answer-btn.correct { background: rgba(6,214,160,0.15); border-color: var(--accent-green); animation: correct-flash 0.5s; }
+.answer-btn.wrong { background: rgba(247,37,133,0.15); border-color: var(--accent-primary); animation: wrong-shake 0.4s; }
+@keyframes correct-flash { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+@keyframes wrong-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.result-screen { display: none; text-align: center; padding: 20px 0; }
+.result-screen.active { display: block; }
+.result-icon { font-size: 4rem; margin-bottom: 12px; animation: bounce-in 0.6s cubic-bezier(0.22,1,0.36,1); }
+@keyframes bounce-in { from { transform: scale(0) rotate(-20deg); } to { transform: scale(1) rotate(0deg); } }
+.result-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+.result-subtitle { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; }
+.result-xp { display: inline-flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--accent-gold); background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.2); padding: 8px 20px; border-radius: 100px; margin-bottom: 20px; }
+.result-continue { width: 100%; padding: 14px; background: var(--gradient-hero); border: none; border-radius: var(--radius-sm); color: white; font-family: 'Fredoka', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.result-continue:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,37,133,0.3); }
+.welcome-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; padding: 40px 20px; }
+.welcome-emoji { font-size: 4rem; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.welcome-title { font-size: 2rem; font-weight: 700; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.welcome-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 32px; max-width: 340px; }
+.name-input { width: 100%; max-width: 300px; padding: 14px 20px; background: var(--bg-card); border: 2px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'Fredoka', sans-serif; font-size: 1rem; text-align: center; outline: none; }
+.name-input:focus { border-color: var(--accent-primary); }
+.name-input::placeholder { color: var(--text-muted); }
+.start-btn { margin-top: 16px; padding: 14px 48px; background: var(--gradient-hero); border: none; border-radius: 100px; color: white; font-family: 'Fredoka', sans-serif; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,37,133,0.4); }
+.start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.reset-btn { display: block; margin: 30px auto; padding: 10px 24px; background: none; border: 1px solid rgba(255,255,255,0.08); border-radius: 100px; color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 0.65rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+.reset-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.confetti { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 200; }
+.confetti-piece { position: absolute; width: 10px; height: 10px; border-radius: 2px; animation: confetti-fall 3s ease-in forwards; }
+@keyframes confetti-fall { 0% { transform: translateY(-100px) rotate(0); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+.fade-in { animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 380px) { .container { padding: 12px; } .header-logo { font-size: 2rem; } .stat-value { font-size: 1.1rem; } }
+</style>
+</head>
+<body>
+
+<div id="loadingScreen" class="container loading-screen">
+  <div class="loader"></div>
+  <div class="loading-text">Chargement du parcours...</div>
+</div>
+
+<div id="welcomeScreen" class="container welcome-screen">
+  <div class="welcome-emoji">🚀</div>
+  <div class="welcome-title" id="welcomeTitle">Onboarding Quest</div>
+  <div class="welcome-desc" id="welcomeDesc"></div>
+  <input type="text" class="name-input" id="nameInput" placeholder="Ton prénom..." maxlength="20">
+  <button class="start-btn" id="startBtn" disabled>Commencer l'aventure</button>
+</div>
+
+<div id="gameScreen" class="container" style="display:none;">
+  <div class="header fade-in">
+    <div class="header-logo" id="gameTitle">Onboarding Quest</div>
+    <div class="header-sub" id="gameSub"></div>
+  </div>
+  <div class="player-card fade-in">
+    <div class="player-info">
+      <div class="player-avatar" id="playerAvatar">🧑‍💻</div>
+      <div><div class="player-name" id="playerName">—</div><div class="player-title">Nouveau stagiaire</div></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-value" id="statXP">0</div><div class="stat-label">XP</div></div>
+      <div class="stat-box"><div class="stat-value badges" id="statStations">0/0</div><div class="stat-label">Stations</div></div>
+      <div class="stat-box"><div class="stat-value badges" id="statBadges">0</div><div class="stat-label">Badges</div></div>
+    </div>
+  </div>
+  <div class="progress-section fade-in">
+    <div class="progress-header"><span class="progress-label">Progression globale</span><span class="progress-pct" id="progressPct">0%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div class="scan-hint fade-in">
+    <div class="scan-hint-icon">📱</div>
+    <div class="scan-hint-text">Scanne un QR code dans les bureaux pour débloquer la question de la station !</div>
+  </div>
+  <div class="section-title"><span>📍</span> Stations</div>
+  <div class="stations-grid" id="stationsGrid"></div>
+  <div class="section-title"><span>🏆</span> Badges</div>
+  <div class="badges-row" id="badgesRow"></div>
+  <button class="reset-btn" id="resetBtn">Réinitialiser la progression</button>
+</div>
+
+<div class="modal-overlay" id="quizModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="quizContent">
+      <div class="modal-station-icon" id="modalIcon"></div>
+      <div class="modal-station-name" id="modalStationName"></div>
+      <div class="modal-lore" id="modalLore"></div>
+      <div class="modal-question" id="modalQuestion"></div>
+      <div class="answers-list" id="answersList"></div>
+    </div>
+    <div class="result-screen" id="resultScreen">
+      <div class="result-icon" id="resultIcon"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-subtitle" id="resultSubtitle"></div>
+      <div class="result-xp" id="resultXP"></div>
+      <button class="result-continue" id="resultContinue">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="completionModal">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:5rem;margin-bottom:16px;animation:bounce-in 1s cubic-bezier(0.22,1,0.36,1);">🏆</div>
+    <div class="welcome-title" style="font-size:1.6rem;">Onboarding terminé !</div>
+    <p style="color:var(--text-secondary);margin:12px 0 20px;line-height:1.5;">Bravo <span id="completionName"></span> ! Tu as exploré tout l'espace de travail. Tu es prêt(e) !</p>
+    <div class="result-xp" id="completionXP">⭐ 0 XP</div><br>
+    <button class="result-continue" id="completionClose">Fermer</button>
+  </div>
+</div>
+
+<script>
+let CONFIG=null, STATIONS=[], BADGES_DEF=[];
+const AVATARS=["🧑‍💻","👩‍💻","🧑‍🔬","👩‍🎨","🧑‍🚀","👩‍🔧","🦊","🐱","🐸","🦄"];
+
+async function loadConfig(){
+  const sources=[new URLSearchParams(location.search).get("config"),"config.json"].filter(Boolean);
+  for(const src of sources){try{const r=await fetch(src,{cache:"no-store"});if(!r.ok)continue;CONFIG=await r.json();STATIONS=CONFIG.stations||[];BADGES_DEF=CONFIG.badges||[];return true;}catch(e){console.warn(e);}}
+  return false;
+}
+function evalBadge(b,s){
+  switch(b.type){
+    case"min_stations":return s.completed>=b.value;
+    case"has_stations":return b.value.every(id=>s.completedIds.includes(id));
+    case"min_perfect":return s.perfectAnswers>=b.value;
+    case"all_stations":return s.completed>=s.total;
+    default:return false;
+  }
+}
+let state;
+function defaultState(){return{name:"",avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],xp:0,completedIds:[],perfectAnswers:0,attempts:{}};}
+function loadState(){try{const s=JSON.parse(localStorage.getItem("onboarding_quest"));if(s&&s.name)return s;}catch(e){}return defaultState();}
+function saveState(){localStorage.setItem("onboarding_quest",JSON.stringify(state));}
+
+async function init(){
+  state=loadState();
+  const ok=await loadConfig();
+  document.getElementById("loadingScreen").style.display="none";
+  if(!ok||!STATIONS.length){
+    document.getElementById("loadingScreen").style.display="flex";
+    document.getElementById("loadingScreen").innerHTML=`<div style="font-size:2.5rem;margin-bottom:12px;">⚠️</div><div class="loading-text">Impossible de charger la configuration</div><div class="error-box">Vérifiez que <code>config.json</code> est présent à côté de <code>index.html</code>.<br><br>Ou passez l'URL : <code>?config=https://…/config.json</code></div>`;
+    return;
+  }
+  if(!state.name)showWelcome();else showGame();
+}
+
+function showWelcome(){
+  document.getElementById("welcomeScreen").style.display="flex";
+  document.getElementById("gameScreen").style.display="none";
+  document.getElementById("welcomeTitle").textContent=CONFIG.title||"Onboarding Quest";
+  document.getElementById("welcomeDesc").textContent=CONFIG.welcome_message||"";
+  const input=document.getElementById("nameInput"),btn=document.getElementById("startBtn");
+  input.addEventListener("input",()=>{btn.disabled=input.value.trim().length<2;});
+  btn.addEventListener("click",()=>{state.name=input.value.trim();state.avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];saveState();showGame();});
+  input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!btn.disabled)btn.click();});
+}
+
+function showGame(){
+  document.getElementById("welcomeScreen").style.display="none";
+  document.getElementById("gameScreen").style.display="block";
+  document.getElementById("gameTitle").textContent=CONFIG.title||"Onboarding Quest";
+  document.getElementById("gameSub").textContent=CONFIG.subtitle||"";
+  document.getElementById("playerName").textContent=state.name;
+  document.getElementById("playerAvatar").textContent=state.avatar;
+  updateStats();renderStations();renderBadges();
+  const sid=parseInt(new URLSearchParams(location.search).get("station"));
+  if(sid&&STATIONS.find(s=>s.id===sid))setTimeout(()=>openQuiz(sid),400);
+}
+
+function updateStats(){
+  const c=state.completedIds.length,t=STATIONS.length,p=t?Math.round(c/t*100):0;
+  const stats={completed:c,completedIds:state.completedIds,perfectAnswers:state.perfectAnswers,total:t};
+  document.getElementById("statXP").textContent=state.xp;
+  document.getElementById("statStations").textContent=`${c}/${t}`;
+  document.getElementById("statBadges").textContent=BADGES_DEF.filter(b=>evalBadge(b,stats)).length;
+  document.getElementById("progressPct").textContent=`${p}%`;
+  document.getElementById("progressFill").style.width=`${p}%`;
+}
+
+function renderStations(){
+  document.getElementById("stationsGrid").innerHTML=STATIONS.map(s=>{
+    const d=state.completedIds.includes(s.id);
+    return`<div class="station-card ${d?'completed':''}" onclick="openQuiz(${s.id})"><div class="station-icon">${s.icon}</div><div class="station-details"><div class="station-name">${s.name}</div><div class="station-hint">${s.hint}</div></div>${d?'<div style="font-size:1.2rem">✅</div>':`<div class="station-xp">+${s.xp} XP</div>`}</div>`;
+  }).join('');
+}
+
+function renderBadges(){
+  const stats={completed:state.completedIds.length,completedIds:state.completedIds,perfectAnswers:state.perfectAnswers,total:STATIONS.length};
+  document.getElementById("badgesRow").innerHTML=BADGES_DEF.map(b=>`<div class="badge ${evalBadge(b,stats)?'earned':'locked'}" title="${b.desc}">${b.icon}<div class="badge-label">${b.label}</div></div>`).join('');
+}
+
+function openQuiz(sid){
+  const s=STATIONS.find(x=>x.id===sid);if(!s)return;
+  const modal=document.getElementById("quizModal"),qc=document.getElementById("quizContent"),rs=document.getElementById("resultScreen");
+  if(state.completedIds.includes(sid)){
+    document.getElementById("modalIcon").textContent=s.icon;document.getElementById("modalStationName").textContent=s.name;
+    document.getElementById("modalLore").textContent=s.lore;document.getElementById("modalQuestion").textContent="✅ Station déjà validée !";
+    document.getElementById("answersList").innerHTML=`<div style="text-align:center;color:var(--accent-green);padding:10px;">Bravo, déjà complétée !</div>`;
+    qc.style.display="block";rs.classList.remove("active");modal.classList.add("active");return;
+  }
+  document.getElementById("modalIcon").textContent=s.icon;document.getElementById("modalStationName").textContent=s.name;
+  document.getElementById("modalLore").textContent=s.lore;document.getElementById("modalQuestion").textContent=s.question;
+  const k=["A","B","C","D"];
+  document.getElementById("answersList").innerHTML=s.answers.map((a,i)=>`<button class="answer-btn" onclick="submitAnswer(${sid},${i})"><span class="answer-key">${k[i]}</span>${a}</button>`).join('');
+  qc.style.display="block";rs.classList.remove("active");modal.classList.add("active");
+}
+
+function submitAnswer(sid,ai){
+  const s=STATIONS.find(x=>x.id===sid);if(!s||state.completedIds.includes(sid))return;
+  const btns=document.querySelectorAll(".answer-btn"),ok=ai===s.correct;
+  if(!state.attempts[sid])state.attempts[sid]=0;state.attempts[sid]++;
+  btns.forEach((b,i)=>{b.style.pointerEvents="none";if(i===s.correct)b.classList.add("correct");else if(i===ai&&!ok)b.classList.add("wrong");});
+  setTimeout(()=>{
+    if(ok){
+      const ft=state.attempts[sid]===1,bxp=ft?25:0,txp=s.xp+bxp;
+      state.completedIds.push(sid);state.xp+=txp;if(ft)state.perfectAnswers++;saveState();
+      document.getElementById("quizContent").style.display="none";
+      const r=document.getElementById("resultScreen");r.classList.add("active");
+      document.getElementById("resultIcon").textContent=ft?"🌟":"✅";
+      document.getElementById("resultTitle").textContent=ft?"Parfait !":"Bien joué !";
+      document.getElementById("resultSubtitle").textContent=ft?"Bonne réponse du premier coup !":"Tu as trouvé la bonne réponse !";
+      document.getElementById("resultXP").innerHTML=`⭐ +${txp} XP ${ft?'<span style="color:var(--accent-green)">(+25 bonus)</span>':''}`;
+      if(state.completedIds.length===STATIONS.length)setTimeout(showCompletion,600);
+    }else{setTimeout(()=>{btns.forEach(b=>{b.classList.remove("wrong","correct");b.style.pointerEvents="auto";});},800);}
+  },600);
+}
+
+function closeModal(){
+  document.getElementById("quizModal").classList.remove("active");updateStats();renderStations();renderBadges();
+  const u=new URL(location);u.searchParams.delete("station");history.replaceState({},"",u);
+}
+function showCompletion(){
+  closeModal();setTimeout(()=>{
+    document.getElementById("completionName").textContent=state.name;
+    document.getElementById("completionXP").textContent=`⭐ ${state.xp} XP total`;
+    document.getElementById("completionModal").classList.add("active");launchConfetti();
+  },300);
+}
+function launchConfetti(){
+  const c=document.createElement("div");c.className="confetti";document.body.appendChild(c);
+  const cols=["#f72585","#7209b7","#4cc9f0","#ffd166","#06d6a0","#f77f00"];
+  for(let i=0;i<60;i++){const p=document.createElement("div");p.className="confetti-piece";p.style.left=Math.random()*100+"%";p.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];p.style.animationDelay=Math.random()*1.5+"s";p.style.animationDuration=(2+Math.random()*2)+"s";p.style.width=(6+Math.random()*8)+"px";p.style.height=(6+Math.random()*8)+"px";c.appendChild(p);}
+  setTimeout(()=>c.remove(),5000);
+}
+
+document.getElementById("modalClose").addEventListener("click",closeModal);
+document.getElementById("resultContinue").addEventListener("click",closeModal);
+document.getElementById("completionClose").addEventListener("click",()=>document.getElementById("completionModal").classList.remove("active"));
+document.getElementById("resetBtn").addEventListener("click",()=>{if(confirm("Réinitialiser toute ta progression ?")){state=defaultState();localStorage.removeItem("onboarding_quest");location.reload();}});
+document.getElementById("quizModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeModal();});
+
+init();
+</script>
+</body>
+</html>

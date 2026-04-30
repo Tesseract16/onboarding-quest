@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔧 Onboarding Quest — Admin QR Codes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f1a;
+  --card: #1a1a2e;
+  --accent: #f72585;
+  --accent2: #7209b7;
+  --accent3: #4cc9f0;
+  --gold: #ffd166;
+  --text: #edf2f4;
+  --text2: #8d99ae;
+  --muted: #555b6e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Fredoka', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.admin-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #f72585, #7209b7, #4cc9f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text2);
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+}
+
+.config-section {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.config-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text2);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+.help-text {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 6px;
+  font-family: 'Space Mono', monospace;
+}
+
+.generate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #f72585, #7209b7);
+  border: none;
+  border-radius: 100px;
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(247,37,133,0.3);
+}
+
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  margin-left: 12px;
+  padding: 14px 32px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  color: var(--text);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.print-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* QR Grid */
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.qr-card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+.qr-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #f72585, #7209b7, #4cc9f0);
+}
+
+.qr-station-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.qr-station-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.qr-station-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.qr-image {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 12px;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qr-url {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--muted);
+  word-break: break-all;
+  margin-top: 8px;
+}
+
+.qr-instruction {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: rgba(247,37,133,0.08);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  color: var(--accent);
+  display: inline-block;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .admin-container {
+    max-width: 100%;
+  }
+
+  .config-section, .generate-btn, .print-btn, .subtitle, h1 {
+    display: none !important;
+  }
+
+  .qr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .qr-card {
+    background: white !important;
+    border: 2px solid #ddd !important;
+    border-radius: 12px;
+    padding: 20px;
+    page-break-inside: avoid;
+  }
+
+  .qr-card::before {
+    background: black !important;
+    height: 2px;
+  }
+
+  .qr-station-name {
+    color: black;
+  }
+
+  .qr-station-hint,
+  .qr-url {
+    color: #666;
+  }
+
+  .qr-instruction {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .qr-image {
+    border: 1px solid #ddd;
+  }
+}
+
+/* Info box */
+.info-box {
+  background: rgba(76,201,240,0.06);
+  border-left: 3px solid var(--accent3);
+  border-radius: 0 10px 10px 0;
+  padding: 16px;
+  margin: 20px 0;
+  font-size: 0.8rem;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.info-box strong {
+  color: var(--accent3);
+}
+</style>
+</head>
+<body>
+
+<div class="admin-container">
+  <h1>🔧 Admin — QR Codes</h1>
+  <p class="subtitle">Génère et imprime les QR codes à placer dans les bureaux</p>
+
+  <div class="config-section">
+    <h2>⚙️ Configuration</h2>
+    <label for="baseUrl">URL de base de l'application (GitHub Pages)</label>
+    <input type="text" id="baseUrl" value="https://VOTRE-USERNAME.github.io/onboarding-quest/" placeholder="https://votre-user.github.io/onboarding-quest/">
+    <div class="help-text">
+      Remplacez par l'URL de votre site GitHub Pages.<br>
+      Format : https://USERNAME.github.io/NOM-DU-REPO/
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>Instructions :</strong><br>
+    1. Entrez l'URL de votre GitHub Pages ci-dessus<br>
+    2. Cliquez "Générer les QR codes"<br>
+    3. Imprimez-les en cliquant "Imprimer / PDF"<br>
+    4. Découpez et placez chaque QR code dans la zone correspondante des bureaux<br>
+    5. Les stagiaires scannent avec leur téléphone !
+  </div>
+
+  <button class="generate-btn" onclick="generateQR()">🎲 Générer les QR codes</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimer / PDF</button>
+
+  <div class="qr-grid" id="qrGrid"></div>
+</div>
+
+<script>
+const STATIONS = [
+  { id: 1, name: "Accueil / Réception",     icon: "🏢", hint: "L'entrée principale" },
+  { id: 2, name: "Salle de réunion",         icon: "🎯", hint: "Là où les idées prennent forme" },
+  { id: 3, name: "Espace café / Cuisine",    icon: "☕", hint: "Recharge tes batteries" },
+  { id: 4, name: "Open Space",               icon: "💻", hint: "Ton futur bureau" },
+  { id: 5, name: "Service IT / Helpdesk",    icon: "🖥️", hint: "Tes meilleurs alliés tech" },
+  { id: 6, name: "Espace détente",           icon: "🎮", hint: "Pause bien méritée" },
+  { id: 7, name: "RH / Direction",           icon: "📋", hint: "Les questions administratives" },
+  { id: 8, name: "Imprimante / Reprographie",icon: "🖨️", hint: "Imprimer, scanner, copier" }
+];
+
+function generateQR() {
+  const baseUrl = document.getElementById("baseUrl").value.trim().replace(/\/$/, '');
+  if (!baseUrl || !baseUrl.startsWith("http")) {
+    alert("Veuillez entrer une URL valide commençant par https://");
+    return;
+  }
+
+  const grid = document.getElementById("qrGrid");
+  grid.innerHTML = STATIONS.map(s => {
+    const url = `${baseUrl}/index.html?station=${s.id}`;
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(url)}&margin=10`;
+    
+    return `
+      <div class="qr-card">
+        <div class="qr-station-icon">${s.icon}</div>
+        <div class="qr-station-name">${s.name}</div>
+        <div class="qr-station-hint">${s.hint}</div>
+        <div class="qr-image">
+          <img src="${qrApiUrl}" alt="QR Code station ${s.id}" loading="lazy">
+        </div>
+        <div class="qr-instruction">📱 Scanne-moi !</div>
+        <div class="qr-url">${url}</div>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+{
+  "title": "Onboarding Quest",
+  "subtitle": "Explore · Apprends · Gagne",
+  "welcome_message": "Bienvenue ! Explore les bureaux en scannant les QR codes placés dans l'espace de travail. Réponds aux questions pour gagner des XP et débloquer des badges !",
+  "stations": [
+    {
+      "id": 1,
+      "name": "Accueil / Réception",
+      "icon": "🏢",
+      "hint": "L'entrée principale",
+      "lore": "Le point de départ de ton aventure ! C'est ici que tout commence. La réception est le premier visage de l'entreprise.",
+      "question": "Quel est le numéro à appeler pour joindre la réception depuis un poste interne ?",
+      "answers": ["Le 0", "Le 100", "Le 9", "Le 1"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 2,
+      "name": "Salle de réunion",
+      "icon": "🎯",
+      "hint": "Là où les idées prennent forme",
+      "lore": "Les salles de réunion sont le cœur de la collaboration. Elles sont réservables via l'outil interne.",
+      "question": "Quel outil utilise-t-on pour réserver une salle de réunion ?",
+      "answers": ["Un tableau blanc à l'entrée", "Outlook / Teams", "Un cahier partagé", "On demande au manager"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 3,
+      "name": "Espace café / Cuisine",
+      "icon": "☕",
+      "hint": "Recharge tes batteries",
+      "lore": "Le lieu de convivialité par excellence. On y échange, on s'y ressource. La machine à café n'a plus de secrets pour les habitués !",
+      "question": "Quelle est la règle d'or de la cuisine partagée ?",
+      "answers": ["Premier arrivé, premier servi", "On lave sa vaisselle et on range", "On ne touche à rien", "On commande des repas"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 4,
+      "name": "Open Space",
+      "icon": "💻",
+      "hint": "Ton futur bureau",
+      "lore": "L'open space est conçu pour favoriser la communication tout en respectant la concentration de chacun.",
+      "question": "Quelle bonne pratique adopter en open space ?",
+      "answers": ["Parler fort pour être entendu", "Mettre son casque pour les appels", "Laisser son téléphone en sonnerie", "Manger à son bureau à midi"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 5,
+      "name": "Service IT / Helpdesk",
+      "icon": "🖥️",
+      "hint": "Tes meilleurs alliés tech",
+      "lore": "Le service IT t'accompagne pour tout problème technique. Ils gèrent le matériel, les accès et la sécurité informatique.",
+      "question": "Comment signaler un problème informatique ?",
+      "answers": ["On envoie un SMS au DSI", "On crée un ticket sur le portail IT", "On redémarre 3 fois le PC", "On attend que ça se règle tout seul"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 6,
+      "name": "Espace détente",
+      "icon": "🎮",
+      "hint": "Pause bien méritée",
+      "lore": "Un espace pour décompresser entre deux sessions de travail. Baby-foot, canapés, jeux de société… Tout pour recharger !",
+      "question": "À quel moment peut-on utiliser l'espace détente ?",
+      "answers": ["Uniquement le vendredi", "Pendant les pauses et le déjeuner", "Après 18h seulement", "Il faut une autorisation écrite"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 7,
+      "name": "RH / Direction",
+      "icon": "📋",
+      "hint": "Les questions administratives",
+      "lore": "Le service RH est ton interlocuteur pour les questions de contrat, congés, et tout ce qui touche à ta vie dans l'entreprise.",
+      "question": "Pour poser un jour de congé, que faut-il faire ?",
+      "answers": ["Prévenir un collègue", "Faire une demande sur l'outil RH / SIRH", "Envoyer un courrier recommandé", "Ne rien faire, c'est automatique"],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 8,
+      "name": "Imprimante / Reprographie",
+      "icon": "🖨️",
+      "hint": "Imprimer, scanner, copier",
+      "lore": "L'espace reprographie est équipé d'imprimantes multifonctions. L'impression se fait avec ton badge ou un code personnel.",
+      "question": "Comment lancer une impression sécurisée ?",
+      "answers": ["On appuie sur tous les boutons", "On badge / saisit son code sur l'imprimante", "On demande à la réception", "On envoie un fax"],
+      "correct": 1,
+      "xp": 50
+    }
+  ],
+  "badges": [
+    { "id": "explorer",  "icon": "🗺️", "label": "Explorateur", "type": "min_stations",  "value": 1,    "desc": "1ère station découverte" },
+    { "id": "curious",   "icon": "🔍", "label": "Curieux",     "type": "min_stations",  "value": 4,    "desc": "4 stations complétées" },
+    { "id": "social",    "icon": "🤝", "label": "Sociable",    "type": "has_stations",  "value": [3,6], "desc": "Café + Détente trouvés" },
+    { "id": "techie",    "icon": "⚡", "label": "Techie",      "type": "has_stations",  "value": [5,8], "desc": "IT + Imprimante maîtrisés" },
+    { "id": "perfect",   "icon": "💎", "label": "Parfait",     "type": "min_perfect",   "value": 6,    "desc": "6 bonnes réponses du 1er coup" },
+    { "id": "champion",  "icon": "👑", "label": "Champion",    "type": "all_stations",  "value": true,  "desc": "Toutes les stations !" }
+  ]
+}
