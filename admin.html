@@ -298,11 +298,8 @@ input[type="text"]:focus {
   <div class="config-section">
     <h2>⚙️ Configuration</h2>
     <label for="baseUrl">URL de base de l'application (GitHub Pages)</label>
-    <input type="text" id="baseUrl" value="https://VOTRE-USERNAME.github.io/onboarding-quest/" placeholder="https://votre-user.github.io/onboarding-quest/">
-    <div class="help-text">
-      Remplacez par l'URL de votre site GitHub Pages.<br>
-      Format : https://USERNAME.github.io/NOM-DU-REPO/
-    </div>
+    <input type="text" id="baseUrl" value="" placeholder="https://votre-user.github.io/onboarding-quest/">
+    <div class="help-text" id="statusMsg">Chargement des stations...</div>
   </div>
 
   <div class="info-box">
@@ -321,18 +318,34 @@ input[type="text"]:focus {
 </div>
 
 <script>
-const STATIONS = [
-  { id: 1, name: "Accueil / Réception",     icon: "🏢", hint: "L'entrée principale" },
-  { id: 2, name: "Salle de réunion",         icon: "🎯", hint: "Là où les idées prennent forme" },
-  { id: 3, name: "Espace café / Cuisine",    icon: "☕", hint: "Recharge tes batteries" },
-  { id: 4, name: "Open Space",               icon: "💻", hint: "Ton futur bureau" },
-  { id: 5, name: "Service IT / Helpdesk",    icon: "🖥️", hint: "Tes meilleurs alliés tech" },
-  { id: 6, name: "Espace détente",           icon: "🎮", hint: "Pause bien méritée" },
-  { id: 7, name: "RH / Direction",           icon: "📋", hint: "Les questions administratives" },
-  { id: 8, name: "Imprimante / Reprographie",icon: "🖨️", hint: "Imprimer, scanner, copier" }
-];
+let STATIONS = [];
+
+// Charge les stations depuis config.json
+async function loadConfig() {
+  try {
+    const resp = await fetch("config.json", { cache: "no-store" });
+    const config = await resp.json();
+    STATIONS = config.stations || [];
+    document.getElementById("statusMsg").textContent = `✅ ${STATIONS.length} stations chargées depuis config.json`;
+    document.getElementById("statusMsg").style.color = "#06d6a0";
+  } catch(e) {
+    document.getElementById("statusMsg").textContent = "⚠️ Impossible de charger config.json — vérifiez qu'il est présent";
+    document.getElementById("statusMsg").style.color = "#f72585";
+  }
+}
+
+// Détecte automatiquement l'URL de base
+function detectBaseUrl() {
+  const url = window.location.href;
+  const base = url.substring(0, url.lastIndexOf('/') + 1);
+  document.getElementById("baseUrl").value = base;
+}
 
 function generateQR() {
+  if (STATIONS.length === 0) {
+    alert("Aucune station chargée. Vérifiez que config.json est présent.");
+    return;
+  }
   const baseUrl = document.getElementById("baseUrl").value.trim().replace(/\/$/, '');
   if (!baseUrl || !baseUrl.startsWith("http")) {
     alert("Veuillez entrer une URL valide commençant par https://");
@@ -358,6 +371,9 @@ function generateQR() {
     `;
   }).join('');
 }
+
+detectBaseUrl();
+loadConfig();
 </script>
 </body>
 </html>
