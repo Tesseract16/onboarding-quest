@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier Jour - ATOUT PC'S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --accent: #00c9a7;
+            --bg: #0f1923;
+            --bg-card: #1a2634;
+            --bg-input: #223344;
+            --text: #e8edf2;
+            --text-muted: #8899aa;
+            --border: #2a3a4a;
+            --success: #00c9a7;
+            --error: #ff6b6b;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .page-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(26,115,232,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(0,201,167,0.1) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .form-section:hover {
+            border-color: rgba(26,115,232,0.3);
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .icon {
+            font-size: 20px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        label .required {
+            color: var(--error);
+            margin-left: 2px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238899aa' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-item span {
+            font-size: 14px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 500px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(26,115,232,0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(26,115,232,0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 32px;
+        }
+
+        .success-message .check {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), #00a88a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .success-message h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .success-message p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">🚀</div>
+            <h1>Bienvenue chez ATOUT PC'S !</h1>
+            <p>C'est ton premier jour, on est ravis de t'accueillir ! Prends quelques minutes pour répondre à ces questions, ça nous aidera à personnaliser ton stage.</p>
+        </div>
+
+        <form id="premierJourForm" action="#" method="POST">
+            <!-- Hidden field for form identification -->
+            <input type="hidden" name="_subject" value="🚀 Nouveau stagiaire - Premier jour chez ATOUT PC'S">
+            <input type="hidden" name="_template" value="table">
+
+            <!-- Section 0: Choix du site -->
+            <div class="form-section">
+                <div class="section-title"><span class="icon">📍</span> Ton site de stage</div>
+                <p class="section-desc">Sélectionne le site où tu effectues ton stage</p>
+
+                <div class="form-group">
+                    <label>Site <span class="required">*</span></label>
+                    <select name="site" id="siteSelect" required>
+                        <option value="">Sélectionne ton site...</option>
+                        <option value="gillot">📍 Gillot — Tuteur : Marc Bijoux</option>
+                        <option value="tampon">📍 Le Tampon — Tuteur : Patrick Laderval</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 1: Identité -->
+            <div class="form-section">
+                <div class="section-title"><span class="icon">👤</span> Qui es-tu ?</div>
+                <p class="section-desc">Fais-toi connaître auprès de l'équipe</p>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Prénom <span class="required">*</span></label>
+                        <input type="text" name="prenom" required placeholder="Ton prénom">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom <span class="required">*</span></label>
+                        <input type="text" name="nom" required placeholder="Ton nom">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" name="email" required placeholder="ton.email@exemple.com">
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Formation / École</label>
+                        <input type="text" name="formation" placeholder="Ex: BTS SIO, Licence Info...">
+                    </div>
+                    <div class="form-group">
+                        <label>Niveau d'études</label>
+                        <select name="niveau">
+                            <option value="">Sélectionne...</option>
+                            <option value="3eme">Stage de 3ème</option>
+                            <option value="seconde">Stage de seconde</option>
+                            <option value="bac">Bac</option>
+                            <option value="bac+1">Bac+1</option>
+                            <option value="bac+2">Bac+2 (BTS/DUT)</option>
+                            <option value="bac+3">Bac+3 (Licence)</option>
+                            <option value="bac+4">Bac+4</option>
+                            <option value="bac+5">Bac+5 (Master)</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Date de début du stage <span class="required">*</span></label>
+                        <input type="date" name="date_debut" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date de fin du stage</label>
+                        <input type="date" name="date_fin">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Compétences -->
+            <div class="form-section">
+                <div class="section-title"><span class="icon">💻</span> Tes compétences</div>
+                <p class="section-desc">Pas de jugement, c'est juste pour savoir d'où tu pars !</p>
+
+                <div class="form-group">
+                    <label>Comment tu évalues ton niveau en informatique ?</label>
+                    <select name="niveau_info">
+                        <option value="">Sélectionne...</option>
+                        <option value="debutant">🌱 Débutant — Je sais utiliser un ordi mais c'est tout</option>
+                        <option value="intermediaire">🔧 Intermédiaire — Je me débrouille, j'ai quelques bases</option>
+                        <option value="avance">⚡ Avancé — Je suis à l'aise, j'ai déjà des compétences techniques</option>
+                        <option value="expert">🚀 Expert — Je code et/ou je répare déjà du matos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tu as déjà touché à quoi ? (coche tout ce qui s'applique)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="montage_pc">
+                            <span>🖥️ Montage / assemblage de PC</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="reparation">
+                            <span>🔧 Réparation / diagnostic de pannes</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="reseau">
+                            <span>🌐 Réseau (câblage, Wi-Fi, configuration)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="logiciel">
+                            <span>💿 Installation / configuration de logiciels</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="vente">
+                            <span>🛒 Vente / relation client</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="competences" value="rien">
+                            <span>🆕 Rien de tout ça (et c'est ok !)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Attentes -->
+            <div class="form-section">
+                <div class="section-title"><span class="icon">🎯</span> Tes attentes</div>
+                <p class="section-desc">Dis-nous ce qui te motive, on essaiera d'adapter ton stage</p>
+
+                <div class="form-group">
+                    <label>Qu'est-ce que tu aimerais apprendre ou découvrir pendant ton stage ? <span class="required">*</span></label>
+                    <textarea name="attentes" required placeholder="Ex: J'aimerais apprendre à monter un PC de A à Z, comprendre comment fonctionne un réseau, découvrir le SAV..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Il y a un domaine qui t'intéresse particulièrement ?</label>
+                    <select name="domaine_interet">
+                        <option value="">Sélectionne...</option>
+                        <option value="sav">🔧 Le SAV / la réparation</option>
+                        <option value="vente">🛒 La vente / le conseil client</option>
+                        <option value="reseau">🌐 Le réseau / l'infrastructure</option>
+                        <option value="logiciel">💻 Les logiciels / l'installation</option>
+                        <option value="tout">🌟 Un peu de tout !</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tu as des questions, des inquiétudes, ou quelque chose à nous dire ?</label>
+                    <textarea name="remarques" placeholder="N'hésite pas, on est là pour que ton stage se passe bien !"></textarea>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="btn-submit">
+                    Envoyer mes réponses ✨
+                </button>
+            </div>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <div class="check">✓</div>
+            <h2>C'est envoyé !</h2>
+            <p>Merci pour tes réponses ! Ton tuteur va les recevoir et pourra préparer ton stage en fonction.<br>En attendant, lance le jeu d'onboarding pour découvrir les locaux ! 🎮</p>
+        </div>
+
+        <div class="footer">
+            ATOUT PC'S — Onboarding Stagiaires
+        </div>
+    </div>
+
+    <script>
+        // Configuration des formulaires Formspree par site
+        // Remplacez les ID ci-dessous par vos vrais ID Formspree
+        const FORMSPREE_IDS = {
+            gillot: 'mrejjyye',   // → email de Marc Bijoux
+            tampon: 'VOTRE_ID_TAMPON'    // → email de Patrick Laderval
+        };
+
+        const form = document.getElementById('premierJourForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const site = document.getElementById('siteSelect').value;
+            if (!site) {
+                alert('Merci de sélectionner ton site de stage.');
+                return;
+            }
+
+            const formspreeId = FORMSPREE_IDS[site];
+            const formAction = `https://formspree.io/f/${formspreeId}`;
+            
+            const submitBtn = form.querySelector('.btn-submit');
+            submitBtn.textContent = 'Envoi en cours...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(formAction, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    form.style.display = 'none';
+                    successMessage.style.display = 'block';
+                } else {
+                    alert('Une erreur est survenue. Réessaie dans quelques instants.');
+                    submitBtn.textContent = 'Envoyer mes réponses ✨';
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                alert('Erreur de connexion. Vérifie ta connexion internet et réessaie.');
+                submitBtn.textContent = 'Envoyer mes réponses ✨';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
