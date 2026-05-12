@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✏️ Éditeur — Onboarding Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f1a; --card: #1a1a2e; --card2: #16213e;
+  --accent: #f72585; --accent2: #7209b7; --accent3: #4cc9f0;
+  --gold: #ffd166; --green: #06d6a0;
+  --text: #edf2f4; --text2: #8d99ae; --muted: #555b6e;
+  --border: rgba(255,255,255,0.08); --radius: 14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Fredoka',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.page{max-width:860px;margin:0 auto;padding:32px 20px 80px;}
+h1{font-size:2rem;background:linear-gradient(135deg,#f72585,#7209b7,#4cc9f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.sub{color:var(--text2);font-size:0.85rem;margin-bottom:28px;}
+
+/* Toolbar */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;position:sticky;top:0;z-index:10;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--border);}
+.tb-btn{padding:10px 20px;border-radius:100px;font-family:'Fredoka',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:var(--card);color:var(--text);display:inline-flex;align-items:center;gap:6px;}
+.tb-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.tb-btn.primary{background:linear-gradient(135deg,#f72585,#7209b7);border:none;color:white;}
+.tb-btn.primary:hover{box-shadow:0 4px 20px rgba(247,37,133,0.3);}
+.tb-btn.green{background:var(--green);border:none;color:#0f0f1a;}
+
+/* Section */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.section h2{font-size:1.05rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* Fields */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:0.8rem;color:var(--text2);margin-bottom:5px;font-weight:500;}
+.field input,.field textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Fredoka',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;}
+.field input:focus,.field textarea:focus{border-color:var(--accent);}
+.field textarea{resize:vertical;min-height:60px;}
+
+/* Station card */
+.station-editor{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;position:relative;}
+.station-editor .station-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;cursor:pointer;user-select:none;}
+.station-editor .station-num{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0;}
+.station-editor .station-title-display{flex:1;font-weight:600;font-size:1rem;}
+.station-editor .collapse-icon{color:var(--muted);font-size:1.2rem;transition:transform 0.3s;}
+.station-editor.collapsed .station-body{display:none;}
+.station-editor.collapsed .collapse-icon{transform:rotate(-90deg);}
+.station-editor .delete-btn{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.station-editor .delete-btn:hover{background:rgba(247,37,133,0.1);color:var(--accent);}
+.station-editor .move-btn{position:absolute;right:52px;background:none;border:none;color:var(--muted);font-size:0.8rem;cursor:pointer;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.station-editor .move-btn:hover{background:rgba(76,201,240,0.1);color:var(--accent3);}
+.station-editor .move-btn:disabled{opacity:0.2;cursor:not-allowed;}
+.station-editor .move-up{top:10px;}
+.station-editor .move-down{top:32px;}
+
+/* Answers */
+.answers-editor{display:flex;flex-direction:column;gap:8px;}
+.answer-row{display:flex;gap:8px;align-items:center;}
+.answer-row input{flex:1;}
+.answer-radio{appearance:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.answer-radio:checked{border-color:var(--green);background:var(--green);}
+.answer-radio:checked::after{content:'✓';font-size:0.7rem;color:#0f0f1a;font-weight:700;}
+.answer-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);font-weight:700;flex-shrink:0;width:20px;}
+
+/* Emoji picker (simple) */
+.emoji-input{width:60px !important;text-align:center;font-size:1.4rem !important;}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:#0f0f1a;padding:12px 28px;border-radius:100px;font-weight:600;font-size:0.9rem;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);z-index:100;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* XP input */
+.xp-input{width:80px !important;text-align:center;}
+
+/* Help */
+.help{background:rgba(76,201,240,0.06);border-left:3px solid var(--accent3);border-radius:0 10px 10px 0;padding:14px;font-size:0.8rem;color:var(--text2);line-height:1.6;margin-bottom:20px;}
+.help strong{color:var(--accent3);}
+
+/* File drop */
+.file-drop{border:2px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;color:var(--muted);font-size:0.85rem;cursor:pointer;transition:all 0.3s;margin-bottom:20px;}
+.file-drop:hover,.file-drop.over{border-color:var(--accent);color:var(--text2);}
+.file-drop input{display:none;}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>✏️ Éditeur de parcours</h1>
+  <p class="sub">Modifie les questions, stations et badges sans toucher au code</p>
+
+  <div class="help">
+    <strong>Comment ça marche :</strong><br>
+    1. Charge ton <code>config.json</code> existant (ou pars de zéro)<br>
+    2. Modifie les stations, questions et réponses ci-dessous<br>
+    3. Clique <strong>"Télécharger config.json"</strong><br>
+    4. Replace le fichier <code>config.json</code> dans ton repo GitHub<br>
+    5. Les changements sont visibles immédiatement !
+  </div>
+
+  <!-- File import -->
+  <div class="file-drop" id="fileDrop" onclick="document.getElementById('fileInput').click()">
+    📂 Glisse ton <strong>config.json</strong> ici ou clique pour l'importer
+    <input type="file" id="fileInput" accept=".json">
+  </div>
+
+  <div class="toolbar">
+    <button class="tb-btn primary" onclick="downloadConfig()">💾 Télécharger config.json</button>
+    <button class="tb-btn" onclick="addStation()">➕ Ajouter une station</button>
+    <button class="tb-btn" onclick="previewJSON()">👁️ Aperçu JSON</button>
+  </div>
+
+  <!-- General settings -->
+  <div class="section">
+    <h2>⚙️ Paramètres généraux</h2>
+    <div class="field">
+      <label>Titre du jeu</label>
+      <input type="text" id="cfgTitle" value="Onboarding Quest">
+    </div>
+    <div class="field">
+      <label>Sous-titre</label>
+      <input type="text" id="cfgSubtitle" value="Explore · Apprends · Gagne">
+    </div>
+    <div class="field">
+      <label>Message d'accueil</label>
+      <textarea id="cfgWelcome">Bienvenue ! Explore les bureaux en scannant les QR codes placés dans l'espace de travail. Réponds aux questions pour gagner des XP et débloquer des badges !</textarea>
+    </div>
+  </div>
+
+  <!-- Stations -->
+  <div class="section">
+    <h2>📍 Stations <span style="font-weight:400;font-size:0.8rem;color:var(--muted);margin-left:auto;" id="stationCount"></span></h2>
+    <div id="stationsContainer"></div>
+    <button class="tb-btn" onclick="addStation()" style="margin-top:10px;">➕ Ajouter une station</button>
+  </div>
+
+  <!-- JSON Preview modal -->
+  <div id="jsonPreview" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,15,26,0.95);z-index:50;padding:20px;overflow-y:auto;">
+    <div style="max-width:700px;margin:40px auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 style="font-size:1.2rem;">Aperçu JSON</h2>
+        <button class="tb-btn" onclick="document.getElementById('jsonPreview').style.display='none'">✕ Fermer</button>
+      </div>
+      <pre id="jsonOutput" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent3);overflow-x:auto;white-space:pre-wrap;line-height:1.6;"></pre>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Default badges (kept as-is, users rarely need to edit these)
+const DEFAULT_BADGES = [
+  {"id":"explorer","icon":"🗺️","label":"Explorateur","type":"min_stations","value":1,"desc":"1ère station découverte"},
+  {"id":"curious","icon":"🔍","label":"Curieux","type":"min_stations","value":4,"desc":"4 stations complétées"},
+  {"id":"social","icon":"🤝","label":"Sociable","type":"has_stations","value":[3,6],"desc":"Café + Détente trouvés"},
+  {"id":"techie","icon":"⚡","label":"Techie","type":"has_stations","value":[5,8],"desc":"IT + Imprimante maîtrisés"},
+  {"id":"perfect","icon":"💎","label":"Parfait","type":"min_perfect","value":6,"desc":"6 bonnes réponses du 1er coup"},
+  {"id":"champion","icon":"👑","label":"Champion","type":"all_stations","value":true,"desc":"Toutes les stations !"}
+];
+
+let stations = [];
+let badges = DEFAULT_BADGES;
+
+// ===== INIT =====
+function init() {
+  // Load default stations
+  stations = [
+    {id:1,name:"Accueil / Réception",icon:"🏢",hint:"L'entrée principale",lore:"Le point de départ de ton aventure !",question:"Quel est le numéro à appeler pour joindre la réception depuis un poste interne ?",answers:["Le 0","Le 100","Le 9","Le 1"],correct:1,xp:50},
+    {id:2,name:"Salle de réunion",icon:"🎯",hint:"Là où les idées prennent forme",lore:"Les salles de réunion sont le cœur de la collaboration.",question:"Quel outil utilise-t-on pour réserver une salle de réunion ?",answers:["Un tableau blanc à l'entrée","Outlook / Teams","Un cahier partagé","On demande au manager"],correct:1,xp:50},
+    {id:3,name:"Espace café / Cuisine",icon:"☕",hint:"Recharge tes batteries",lore:"Le lieu de convivialité par excellence.",question:"Quelle est la règle d'or de la cuisine partagée ?",answers:["Premier arrivé, premier servi","On lave sa vaisselle et on range","On ne touche à rien","On commande des repas"],correct:1,xp:50},
+    {id:4,name:"Open Space",icon:"💻",hint:"Ton futur bureau",lore:"L'open space est conçu pour favoriser la communication.",question:"Quelle bonne pratique adopter en open space ?",answers:["Parler fort pour être entendu","Mettre son casque pour les appels","Laisser son téléphone en sonnerie","Manger à son bureau à midi"],correct:1,xp:50},
+    {id:5,name:"Service IT / Helpdesk",icon:"🖥️",hint:"Tes meilleurs alliés tech",lore:"Le service IT t'accompagne pour tout problème technique.",question:"Comment signaler un problème informatique ?",answers:["On envoie un SMS au DSI","On crée un ticket sur le portail IT","On redémarre 3 fois le PC","On attend que ça se règle tout seul"],correct:1,xp:50},
+    {id:6,name:"Espace détente",icon:"🎮",hint:"Pause bien méritée",lore:"Un espace pour décompresser entre deux sessions de travail.",question:"À quel moment peut-on utiliser l'espace détente ?",answers:["Uniquement le vendredi","Pendant les pauses et le déjeuner","Après 18h seulement","Il faut une autorisation écrite"],correct:1,xp:50},
+    {id:7,name:"RH / Direction",icon:"📋",hint:"Les questions administratives",lore:"Le service RH est ton interlocuteur pour les questions de contrat et congés.",question:"Pour poser un jour de congé, que faut-il faire ?",answers:["Prévenir un collègue","Faire une demande sur l'outil RH / SIRH","Envoyer un courrier recommandé","Ne rien faire, c'est automatique"],correct:1,xp:50},
+    {id:8,name:"Imprimante / Reprographie",icon:"🖨️",hint:"Imprimer, scanner, copier",lore:"L'espace reprographie est équipé d'imprimantes multifonctions.",question:"Comment lancer une impression sécurisée ?",answers:["On appuie sur tous les boutons","On badge / saisit son code sur l'imprimante","On demande à la réception","On envoie un fax"],correct:1,xp:50}
+  ];
+  renderStations();
+}
+
+// ===== RENDER =====
+function renderStations() {
+  const c = document.getElementById("stationsContainer");
+  document.getElementById("stationCount").textContent = `${stations.length} station${stations.length>1?'s':''}`;
+  
+  c.innerHTML = stations.map((s, idx) => {
+    const keys = ["A","B","C","D"];
+    return `
+    <div class="station-editor" id="station-${idx}">
+      <button class="delete-btn" onclick="deleteStation(${idx})" title="Supprimer">🗑</button>
+      <button class="move-btn move-up" onclick="moveStation(${idx},-1)" title="Monter" ${idx===0?'disabled':''}>▲</button>
+      <button class="move-btn move-down" onclick="moveStation(${idx},1)" title="Descendre" ${idx===stations.length-1?'disabled':''}>▼</button>
+      <div class="station-header" onclick="toggleCollapse(${idx})">
+        <div class="station-num">${s.id}</div>
+        <div class="station-title-display">${s.icon} ${s.name}</div>
+        <div class="collapse-icon">▼</div>
+      </div>
+      <div class="station-body">
+        <div style="display:flex;gap:10px;">
+          <div class="field" style="flex:0 0 70px;">
+            <label>Emoji</label>
+            <input type="text" class="emoji-input" value="${s.icon}" onchange="updateStation(${idx},'icon',this.value)" maxlength="4">
+          </div>
+          <div class="field" style="flex:1;">
+            <label>Nom du lieu</label>
+            <input type="text" value="${esc(s.name)}" onchange="updateStation(${idx},'name',this.value)">
+          </div>
+          <div class="field" style="flex:0 0 80px;">
+            <label>XP</label>
+            <input type="number" class="xp-input" value="${s.xp}" onchange="updateStation(${idx},'xp',parseInt(this.value)||50)" min="0" step="5">
+          </div>
+        </div>
+        <div class="field">
+          <label>Indice (sous-titre)</label>
+          <input type="text" value="${esc(s.hint)}" onchange="updateStation(${idx},'hint',this.value)">
+        </div>
+        <div class="field">
+          <label>Description / Lore</label>
+          <textarea onchange="updateStation(${idx},'lore',this.value)">${esc(s.lore)}</textarea>
+        </div>
+        <div class="field">
+          <label>❓ Question</label>
+          <textarea onchange="updateStation(${idx},'question',this.value)" style="font-weight:600;">${esc(s.question)}</textarea>
+        </div>
+        <div class="field">
+          <label>Réponses <span style="color:var(--green);font-size:0.7rem;">(coche = bonne réponse)</span></label>
+          <div class="answers-editor">
+            ${s.answers.map((a, ai) => `
+              <div class="answer-row">
+                <span class="answer-label">${keys[ai]}</span>
+                <input type="radio" class="answer-radio" name="correct-${idx}" ${ai===s.correct?'checked':''} onchange="updateStation(${idx},'correct',${ai})">
+                <input type="text" value="${esc(a)}" onchange="updateAnswer(${idx},${ai},this.value)">
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s) { return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ===== ACTIONS =====
+function updateStation(idx, key, val) {
+  stations[idx][key] = val;
+  // Update header display
+  const hdr = document.querySelector(`#station-${idx} .station-title-display`);
+  if (hdr) hdr.textContent = `${stations[idx].icon} ${stations[idx].name}`;
+}
+
+function updateAnswer(idx, ai, val) {
+  stations[idx].answers[ai] = val;
+}
+
+function deleteStation(idx) {
+  if (!confirm(`Supprimer la station "${stations[idx].name}" ?`)) return;
+  stations.splice(idx, 1);
+  stations.forEach((s, i) => s.id = i + 1);
+  renderStations();
+  showToast("Station supprimée");
+}
+
+function moveStation(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= stations.length) return;
+  const temp = stations[idx];
+  stations[idx] = stations[newIdx];
+  stations[newIdx] = temp;
+  stations.forEach((s, i) => s.id = i + 1);
+  renderStations();
+  showToast(dir === -1 ? "⬆️ Station montée" : "⬇️ Station descendue");
+}
+
+function addStation() {
+  const newId = stations.length + 1;
+  stations.push({
+    id: newId,
+    name: "Nouvelle station",
+    icon: "📌",
+    hint: "Description courte",
+    lore: "Description détaillée du lieu...",
+    question: "Votre question ici ?",
+    answers: ["Réponse A", "Bonne réponse B", "Réponse C", "Réponse D"],
+    correct: 1,
+    xp: 50
+  });
+  renderStations();
+  // Scroll to new station
+  const el = document.getElementById(`station-${stations.length-1}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showToast("Station ajoutée !");
+}
+
+function toggleCollapse(idx) {
+  document.getElementById(`station-${idx}`).classList.toggle("collapsed");
+}
+
+// ===== BUILD CONFIG =====
+function buildConfig() {
+  return {
+    title: document.getElementById("cfgTitle").value,
+    subtitle: document.getElementById("cfgSubtitle").value,
+    welcome_message: document.getElementById("cfgWelcome").value,
+    stations: stations.map(s => ({
+      id: s.id,
+      name: s.name,
+      icon: s.icon,
+      hint: s.hint,
+      lore: s.lore,
+      question: s.question,
+      answers: [...s.answers],
+      correct: s.correct,
+      xp: s.xp
+    })),
+    badges: badges
+  };
+}
+
+// ===== DOWNLOAD =====
+function downloadConfig() {
+  const config = buildConfig();
+  const json = JSON.stringify(config, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'config.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("✅ config.json téléchargé !");
+}
+
+// ===== PREVIEW =====
+function previewJSON() {
+  const config = buildConfig();
+  document.getElementById("jsonOutput").textContent = JSON.stringify(config, null, 2);
+  document.getElementById("jsonPreview").style.display = "block";
+}
+
+// ===== IMPORT =====
+function importConfig(json) {
+  try {
+    const config = JSON.parse(json);
+    if (config.title) document.getElementById("cfgTitle").value = config.title;
+    if (config.subtitle) document.getElementById("cfgSubtitle").value = config.subtitle;
+    if (config.welcome_message) document.getElementById("cfgWelcome").value = config.welcome_message;
+    if (config.stations) stations = config.stations;
+    if (config.badges) badges = config.badges;
+    renderStations();
+    showToast("✅ Configuration importée !");
+  } catch(e) {
+    alert("Erreur de parsing JSON : " + e.message);
+  }
+}
+
+// File input
+document.getElementById("fileInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => importConfig(ev.target.result);
+  reader.readAsText(file);
+});
+
+// Drag & drop
+const drop = document.getElementById("fileDrop");
+drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", (e) => {
+  e.preventDefault(); drop.classList.remove("over");
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => importConfig(ev.target.result);
+  reader.readAsText(file);
+});
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+init();
+</script>
+</body>
+</html>
