@@ -7,9 +7,9 @@
       "id": 1,
       "name": "La porte de secours",
       "icon": "🚪",
-      "hint": "A l'entrée du magasin, repère la sortie ",
+      "hint": "A l'entrée du magasin, repère la sortie",
       "lore": "La porte de secours est un élément essentiel de la sécurité. Elle ne doit jamais être bloquée ni encombrée. En cas d'évacuation, c'est par ici que tout le monde sort !",
-      "question": "Que signifie "URL" ?",
+      "question": "Que signifie « URL » ?",
       "answers": [
         "Un logiciel",
         "Une adresse web",
@@ -39,7 +39,7 @@
       "id": 3,
       "name": "Les toilettes",
       "icon": "🚻",
-      "hint": "A l'entrée, porte sur ta droite ",
+      "hint": "A l'entrée, porte sur ta droite",
       "lore": "Les toilettes sont un espace commun utilisé par toute l'équipe, et parfois par les clients. Les garder propres, c'est une question de respect pour les autres. POINT SECURITE : la trousse de premier soin est dans l'armoire !!",
       "question": "Le disque dur sert à :",
       "answers": [
@@ -57,7 +57,7 @@
       "icon": "🏷️",
       "hint": "Sur le bureau au SAV, imprime ton prénom x2",
       "lore": "L'étiqueteuse te permet de créer des étiquettes personnalisées (surtout pour le matériel des clients). Imprime 2 exemplaires de ton prénom : un pour ton casier, et un à mettre sur ton badge. C'est ta première mission pratique !",
-      "question": "Que signifie "HTTP" (dans une adresse web) ?",
+      "question": "Que signifie « HTTP » (dans une adresse web) ?",
       "answers": [
         "Un protocole de communication",
         "Un logiciel",
@@ -88,7 +88,7 @@
       "name": "Le bureau administratif",
       "icon": "💼",
       "hint": "À l'étage, dépose ta convention",
-      "lore": " C'est le bureau du RH, ton premier interlocuteur en cas de question. Pense à déposer ta convention de stage et a récupérer ton badge ici ",
+      "lore": "C'est le bureau du RH, ton premier interlocuteur en cas de question. Pense à déposer ta convention de stage et a récupérer ton badge ici.",
       "question": "Le processeur (CPU) sert à :",
       "answers": [
         "Afficher les images",
@@ -120,7 +120,7 @@
       "name": "Le point sécurité",
       "icon": "🧯",
       "hint": "En haut de l'escalier, repère les extincteurs",
-      "lore": "La sécurité c'est l'affaire de tous ! En cas d'urgence (incendie, accident…), il faut savoir où sont les extincteurs, les sorties de secours et la trousse de premiers soins. Garde donc ces informations en tête. ",
+      "lore": "La sécurité c'est l'affaire de tous ! En cas d'urgence (incendie, accident…), il faut savoir où sont les extincteurs, les sorties de secours et la trousse de premiers soins. Garde donc ces informations en tête.",
       "question": "L'alarme incendie se déclenche. Que fais-tu en premier ?",
       "answers": [
         "Tu prends tes affaires et tu descends tranquillement",
@@ -170,10 +170,7 @@
       "icon": "🔧",
       "label": "Technicien",
       "type": "has_stations",
-      "value": [
-        2,
-        5
-      ],
+      "value": [2, 5],
       "desc": "SAV + Sécurité maîtrisés"
     },
     {
@@ -181,10 +178,7 @@
       "icon": "🤝",
       "label": "Équipier",
       "type": "has_stations",
-      "value": [
-        4,
-        6
-      ],
+      "value": [4, 6],
       "desc": "Cuisine + Équipe découverts"
     },
     {
@@ -192,10 +186,7 @@
       "icon": "🏷️",
       "label": "Installé",
       "type": "has_stations",
-      "value": [
-        8,
-        9
-      ],
+      "value": [8, 9],
       "desc": "Casier + Étiqueteuse faits"
     },
     {
