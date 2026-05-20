@@ -6,6 +6,7 @@
 <title>🎮 Onboarding Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root {
   --bg-dark: #0f0f1a;
@@ -31,15 +32,21 @@
 body { font-family: 'Fredoka', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, rgba(247,37,133,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(76,201,240,0.08) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(114,9,183,0.05) 0%, transparent 70%); pointer-events: none; z-index: 0; }
 .container { max-width: 480px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+/* Loading */
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; gap: 16px; }
 .loader { width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { color: var(--text-secondary); font-size: 0.9rem; }
 .error-box { background: rgba(247,37,133,0.1); border: 1px solid rgba(247,37,133,0.3); border-radius: var(--radius-sm); padding: 16px; margin-top: 12px; text-align: left; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; max-width: 380px; }
 .error-box code { font-family: 'Space Mono', monospace; font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; }
+
+/* Header */
 .header { text-align: center; padding: 30px 0 20px; }
 .header-logo { font-size: 2.4rem; font-weight: 700; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
 .header-sub { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); margin-top: 6px; letter-spacing: 3px; text-transform: uppercase; }
+
+/* Player card */
 .player-card { background: var(--gradient-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 20px; margin: 16px 0; box-shadow: var(--shadow-card); position: relative; overflow: hidden; }
 .player-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-hero); }
 .player-info { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
@@ -51,6 +58,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--accent-gold); }
 .stat-value.badges { color: var(--accent-green); }
 .stat-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+/* Progress */
 .progress-section { margin: 16px 0; }
 .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .progress-label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); }
@@ -58,9 +67,60 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .progress-track { width: 100%; height: 10px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
 .progress-fill { height: 100%; background: var(--gradient-hero); border-radius: 100px; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); position: relative; }
 .progress-fill::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 30px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3)); border-radius: 100px; }
-.scan-hint { text-align: center; padding: 24px; margin: 16px 0; background: rgba(247,37,133,0.05); border: 1px dashed rgba(247,37,133,0.2); border-radius: var(--radius); }
-.scan-hint-icon { font-size: 2rem; margin-bottom: 8px; }
-.scan-hint-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ===== SCAN BUTTON ===== */
+.scan-section { text-align: center; margin: 20px 0; }
+.scan-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 16px 32px;
+  background: var(--gradient-hero);
+  border: none; border-radius: 100px;
+  color: white; font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 4px 24px rgba(247,37,133,0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+.scan-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(247,37,133,0.5); }
+.scan-btn:active { transform: scale(0.97); }
+.scan-btn-icon { font-size: 1.4rem; }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 4px 24px rgba(247,37,133,0.4); }
+  50% { box-shadow: 0 4px 36px rgba(247,37,133,0.6), 0 0 60px rgba(247,37,133,0.15); }
+}
+.scan-hint-small { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; }
+
+/* ===== SCANNER MODAL ===== */
+.scanner-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15,15,26,0.97); z-index: 150;
+  flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+}
+.scanner-overlay.active { display: flex; }
+.scanner-header { text-align: center; margin-bottom: 20px; }
+.scanner-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 4px; }
+.scanner-subtitle { font-size: 0.8rem; color: var(--text-secondary); }
+#scannerView {
+  width: 100%; max-width: 360px; border-radius: var(--radius);
+  overflow: hidden; background: #000;
+}
+#scannerView video { border-radius: var(--radius); }
+.scanner-close {
+  margin-top: 20px; padding: 12px 36px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px; color: var(--text-primary);
+  font-family: 'Fredoka', sans-serif; font-size: 0.95rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.scanner-close:hover { background: rgba(255,255,255,0.12); }
+.scanner-feedback {
+  margin-top: 12px; padding: 10px 20px; border-radius: var(--radius-sm);
+  font-size: 0.85rem; display: none; text-align: center;
+}
+.scanner-feedback.success { display: block; background: rgba(6,214,160,0.15); color: var(--accent-green); }
+.scanner-feedback.error { display: block; background: rgba(247,37,133,0.15); color: var(--accent-primary); }
+
+/* ===== STATIONS ===== */
 .section-title { font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
 .section-title span { font-size: 1.2rem; }
 .stations-grid { display: flex; flex-direction: column; gap: 10px; }
@@ -68,17 +128,27 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .station-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: var(--shadow-glow); }
 .station-card.completed { border-color: rgba(6,214,160,0.2); }
 .station-card.completed::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient-success); }
+.station-card.locked { opacity: 0.45; cursor: default; }
+.station-card.locked:hover { background: var(--gradient-card); transform: none; box-shadow: none; }
+.station-card.scanned { border-color: rgba(76,201,240,0.25); }
+.station-card.scanned::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-secondary)); }
 .station-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; background: rgba(255,255,255,0.04); }
 .station-card.completed .station-icon { background: rgba(6,214,160,0.1); }
+.station-card.locked .station-icon { filter: grayscale(0.8); }
 .station-details { flex: 1; min-width: 0; }
 .station-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
 .station-hint { font-size: 0.75rem; color: var(--text-muted); }
-.station-xp { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--accent-gold); font-weight: 700; background: rgba(255,209,102,0.1); padding: 3px 8px; border-radius: 100px; }
+.station-xp { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--accent-gold); font-weight: 700; background: rgba(255,209,102,0.1); padding: 3px 8px; border-radius: 100px; white-space: nowrap; }
+.station-lock { font-size: 1.1rem; opacity: 0.5; }
+
+/* Badges */
 .badges-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
 .badge { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; position: relative; transition: all 0.3s; }
 .badge.earned { border-color: var(--accent-gold); background: rgba(255,209,102,0.1); box-shadow: 0 0 16px rgba(255,209,102,0.2); }
 .badge.locked { filter: grayscale(1) opacity(0.3); }
 .badge-label { position: absolute; bottom: -18px; font-size: 0.5rem; font-family: 'Space Mono', monospace; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+
+/* Modals */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,15,26,0.92); backdrop-filter: blur(12px); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 440px; box-shadow: 0 24px 80px rgba(0,0,0,0.6); position: relative; animation: modal-in 0.4s cubic-bezier(0.22,1,0.36,1); }
@@ -97,6 +167,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .answer-btn.wrong { background: rgba(247,37,133,0.15); border-color: var(--accent-primary); animation: wrong-shake 0.4s; }
 @keyframes correct-flash { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 @keyframes wrong-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* Results */
 .result-screen { display: none; text-align: center; padding: 20px 0; }
 .result-screen.active { display: block; }
 .result-icon { font-size: 4rem; margin-bottom: 12px; animation: bounce-in 0.6s cubic-bezier(0.22,1,0.36,1); }
@@ -106,6 +178,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .result-xp { display: inline-flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--accent-gold); background: rgba(255,209,102,0.1); border: 1px solid rgba(255,209,102,0.2); padding: 8px 20px; border-radius: 100px; margin-bottom: 20px; }
 .result-continue { width: 100%; padding: 14px; background: var(--gradient-hero); border: none; border-radius: var(--radius-sm); color: white; font-family: 'Fredoka', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
 .result-continue:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,37,133,0.3); }
+
+/* Welcome */
 .welcome-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; padding: 40px 20px; }
 .welcome-emoji { font-size: 4rem; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
 @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
@@ -117,6 +191,8 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 .start-btn { margin-top: 16px; padding: 14px 48px; background: var(--gradient-hero); border: none; border-radius: 100px; color: white; font-family: 'Fredoka', sans-serif; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
 .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,37,133,0.4); }
 .start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* Reset & misc */
 .reset-btn { display: block; margin: 30px auto; padding: 10px 24px; background: none; border: 1px solid rgba(255,255,255,0.08); border-radius: 100px; color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 0.65rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
 .reset-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
 .confetti { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 200; }
@@ -124,16 +200,31 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
 @keyframes confetti-fall { 0% { transform: translateY(-100px) rotate(0); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 .fade-in { animation: fadeIn 0.5s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Toast notification */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px; padding: 12px 24px;
+  font-size: 0.85rem; color: var(--text-primary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 300; transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  text-align: center; max-width: 90%;
+}
+.toast.visible { transform: translateX(-50%) translateY(0); }
+
 @media (max-width: 380px) { .container { padding: 12px; } .header-logo { font-size: 2rem; } .stat-value { font-size: 1.1rem; } }
 </style>
 </head>
 <body>
 
+<!-- LOADING -->
 <div id="loadingScreen" class="container loading-screen">
   <div class="loader"></div>
   <div class="loading-text">Chargement du parcours...</div>
 </div>
 
+<!-- WELCOME -->
 <div id="welcomeScreen" class="container welcome-screen">
   <div class="welcome-emoji">🚀</div>
   <div class="welcome-title" id="welcomeTitle">Onboarding Quest</div>
@@ -142,6 +233,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
   <button class="start-btn" id="startBtn" disabled>Commencer l'aventure</button>
 </div>
 
+<!-- GAME -->
 <div id="gameScreen" class="container" style="display:none;">
   <div class="header fade-in">
     <div class="header-logo" id="gameTitle">Onboarding Quest</div>
@@ -162,10 +254,16 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
     <div class="progress-header"><span class="progress-label">Progression globale</span><span class="progress-pct" id="progressPct">0%</span></div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   </div>
-  <div class="scan-hint fade-in">
-    <div class="scan-hint-icon">📱</div>
-    <div class="scan-hint-text">Scanne un QR code dans les bureaux pour débloquer la question de la station !</div>
+
+  <!-- SCAN BUTTON -->
+  <div class="scan-section fade-in">
+    <button class="scan-btn" id="scanBtn" onclick="openScanner()">
+      <span class="scan-btn-icon">📷</span>
+      Scanner un QR code
+    </button>
+    <div class="scan-hint-small">Pointe la caméra vers un QR code dans les locaux</div>
   </div>
+
   <div class="section-title"><span>📍</span> Stations</div>
   <div class="stations-grid" id="stationsGrid"></div>
   <div class="section-title"><span>🏆</span> Badges</div>
@@ -173,6 +271,18 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
   <button class="reset-btn" id="resetBtn">Réinitialiser la progression</button>
 </div>
 
+<!-- SCANNER MODAL -->
+<div class="scanner-overlay" id="scannerOverlay">
+  <div class="scanner-header">
+    <div class="scanner-title">📷 Scanner un QR code</div>
+    <div class="scanner-subtitle">Pointe la caméra vers le QR code de la station</div>
+  </div>
+  <div id="scannerView"></div>
+  <div class="scanner-feedback" id="scannerFeedback"></div>
+  <button class="scanner-close" id="scannerClose" onclick="closeScanner()">Fermer le scanner</button>
+</div>
+
+<!-- QUIZ MODAL -->
 <div class="modal-overlay" id="quizModal">
   <div class="modal">
     <button class="modal-close" id="modalClose">✕</button>
@@ -193,6 +303,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
   </div>
 </div>
 
+<!-- COMPLETION MODAL -->
 <div class="modal-overlay" id="completionModal">
   <div class="modal" style="text-align:center;">
     <div style="font-size:5rem;margin-bottom:16px;animation:bounce-in 1s cubic-bezier(0.22,1,0.36,1);">🏆</div>
@@ -203,146 +314,357 @@ body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 
   </div>
 </div>
 
-<script>
-let CONFIG=null, STATIONS=[], BADGES_DEF=[];
-const AVATARS=["🧑‍💻","👩‍💻","🧑‍🔬","👩‍🎨","🧑‍🚀","👩‍🔧","🦊","🐱","🐸","🦄"];
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-async function loadConfig(){
-  const sources=[new URLSearchParams(location.search).get("config"),"config.json"].filter(Boolean);
-  for(const src of sources){try{const r=await fetch(src,{cache:"no-store"});if(!r.ok)continue;CONFIG=await r.json();STATIONS=CONFIG.stations||[];BADGES_DEF=CONFIG.badges||[];return true;}catch(e){console.warn(e);}}
+<script>
+// ===== CONFIG =====
+let CONFIG = null, STATIONS = [], BADGES_DEF = [];
+const AVATARS = ["🧑‍💻","👩‍💻","🧑‍🔬","👩‍🎨","🧑‍🚀","👩‍🔧","🦊","🐱","🐸","🦄"];
+
+// ===== LOAD CONFIG =====
+async function loadConfig() {
+  const sources = [new URLSearchParams(location.search).get("config"), "config.json"].filter(Boolean);
+  for (const src of sources) {
+    try {
+      const r = await fetch(src, { cache: "no-store" });
+      if (!r.ok) continue;
+      CONFIG = await r.json();
+      STATIONS = CONFIG.stations || [];
+      BADGES_DEF = CONFIG.badges || [];
+      return true;
+    } catch (e) { console.warn(e); }
+  }
   return false;
 }
-function evalBadge(b,s){
-  switch(b.type){
-    case"min_stations":return s.completed>=b.value;
-    case"has_stations":return b.value.every(id=>s.completedIds.includes(id));
-    case"min_perfect":return s.perfectAnswers>=b.value;
-    case"all_stations":return s.completed>=s.total;
-    default:return false;
+
+function evalBadge(b, s) {
+  switch (b.type) {
+    case "min_stations": return s.completed >= b.value;
+    case "has_stations": return b.value.every(id => s.completedIds.includes(id));
+    case "min_perfect": return s.perfectAnswers >= b.value;
+    case "all_stations": return s.completed >= s.total;
+    default: return false;
   }
 }
-let state;
-function defaultState(){return{name:"",avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],xp:0,completedIds:[],perfectAnswers:0,attempts:{}};}
-function loadState(){try{const s=JSON.parse(localStorage.getItem("onboarding_quest"));if(s&&s.name)return s;}catch(e){}return defaultState();}
-function saveState(){localStorage.setItem("onboarding_quest",JSON.stringify(state));}
 
-async function init(){
-  state=loadState();
-  const ok=await loadConfig();
-  document.getElementById("loadingScreen").style.display="none";
-  if(!ok||!STATIONS.length){
-    document.getElementById("loadingScreen").style.display="flex";
-    document.getElementById("loadingScreen").innerHTML=`<div style="font-size:2.5rem;margin-bottom:12px;">⚠️</div><div class="loading-text">Impossible de charger la configuration</div><div class="error-box">Vérifiez que <code>config.json</code> est présent à côté de <code>index.html</code>.<br><br>Ou passez l'URL : <code>?config=https://…/config.json</code></div>`;
+// ===== STATE (avec scannedIds) =====
+let state;
+function defaultState() {
+  return { name: "", avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)], xp: 0, completedIds: [], scannedIds: [], perfectAnswers: 0, attempts: {} };
+}
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem("onboarding_quest"));
+    if (s && s.name) {
+      // Migration: si pas de scannedIds, l'ajouter
+      if (!s.scannedIds) s.scannedIds = [...(s.completedIds || [])];
+      return s;
+    }
+  } catch (e) {}
+  return defaultState();
+}
+function saveState() { localStorage.setItem("onboarding_quest", JSON.stringify(state)); }
+
+// ===== TOAST =====
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("visible");
+  setTimeout(() => t.classList.remove("visible"), duration);
+}
+
+// ===== SCANNER QR =====
+let html5QrScanner = null;
+
+function openScanner() {
+  const overlay = document.getElementById("scannerOverlay");
+  const feedback = document.getElementById("scannerFeedback");
+  feedback.className = "scanner-feedback";
+  feedback.textContent = "";
+  overlay.classList.add("active");
+
+  html5QrScanner = new Html5Qrcode("scannerView");
+  html5QrScanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    onScanSuccess,
+    () => {} // ignore errors silently
+  ).catch(err => {
+    feedback.className = "scanner-feedback error";
+    feedback.textContent = "Impossible d'accéder à la caméra. Vérifie les autorisations.";
+    console.error("Scanner error:", err);
+  });
+}
+
+function closeScanner() {
+  const overlay = document.getElementById("scannerOverlay");
+  if (html5QrScanner) {
+    html5QrScanner.stop().then(() => {
+      html5QrScanner.clear();
+      html5QrScanner = null;
+    }).catch(() => {});
+  }
+  overlay.classList.remove("active");
+}
+
+function onScanSuccess(decodedText) {
+  // Extraire le paramètre station de l'URL scannée
+  let stationId = null;
+  try {
+    const url = new URL(decodedText);
+    stationId = parseInt(url.searchParams.get("station"));
+  } catch (e) {
+    // Si ce n'est pas une URL, essayer comme nombre direct
+    stationId = parseInt(decodedText);
+  }
+
+  if (!stationId || !STATIONS.find(s => s.id === stationId)) {
+    const feedback = document.getElementById("scannerFeedback");
+    feedback.className = "scanner-feedback error";
+    feedback.textContent = "QR code non reconnu. Essaie un autre !";
     return;
   }
-  if(!state.name)showWelcome();else showGame();
+
+  // Fermer le scanner
+  closeScanner();
+
+  // Marquer comme scanné
+  if (!state.scannedIds.includes(stationId)) {
+    state.scannedIds.push(stationId);
+    saveState();
+    const station = STATIONS.find(s => s.id === stationId);
+    showToast(`📍 Station "${station.name}" débloquée !`);
+    renderStations();
+    updateStats();
+  }
+
+  // Ouvrir le quiz
+  setTimeout(() => openQuiz(stationId), 400);
 }
 
-function showWelcome(){
-  document.getElementById("welcomeScreen").style.display="flex";
-  document.getElementById("gameScreen").style.display="none";
-  document.getElementById("welcomeTitle").textContent=CONFIG.title||"Onboarding Quest";
-  document.getElementById("welcomeDesc").textContent=CONFIG.welcome_message||"";
-  const input=document.getElementById("nameInput"),btn=document.getElementById("startBtn");
-  input.addEventListener("input",()=>{btn.disabled=input.value.trim().length<2;});
-  btn.addEventListener("click",()=>{state.name=input.value.trim();state.avatar=AVATARS[Math.floor(Math.random()*AVATARS.length)];saveState();showGame();});
-  input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!btn.disabled)btn.click();});
+// ===== INIT =====
+async function init() {
+  state = loadState();
+  const ok = await loadConfig();
+  document.getElementById("loadingScreen").style.display = "none";
+  if (!ok || !STATIONS.length) {
+    document.getElementById("loadingScreen").style.display = "flex";
+    document.getElementById("loadingScreen").innerHTML = `<div style="font-size:2.5rem;margin-bottom:12px;">⚠️</div><div class="loading-text">Impossible de charger la configuration</div><div class="error-box">Vérifiez que <code>config.json</code> est présent à côté de <code>index.html</code>.<br><br>Ou passez l'URL : <code>?config=https://…/config.json</code></div>`;
+    return;
+  }
+  if (!state.name) showWelcome(); else showGame();
 }
 
-function showGame(){
-  document.getElementById("welcomeScreen").style.display="none";
-  document.getElementById("gameScreen").style.display="block";
-  document.getElementById("gameTitle").textContent=CONFIG.title||"Onboarding Quest";
-  document.getElementById("gameSub").textContent=CONFIG.subtitle||"";
-  document.getElementById("playerName").textContent=state.name;
-  document.getElementById("playerAvatar").textContent=state.avatar;
-  updateStats();renderStations();renderBadges();
-  const sid=parseInt(new URLSearchParams(location.search).get("station"));
-  if(sid&&STATIONS.find(s=>s.id===sid))setTimeout(()=>openQuiz(sid),400);
+// ===== WELCOME =====
+function showWelcome() {
+  document.getElementById("welcomeScreen").style.display = "flex";
+  document.getElementById("gameScreen").style.display = "none";
+  document.getElementById("welcomeTitle").textContent = CONFIG.title || "Onboarding Quest";
+  document.getElementById("welcomeDesc").textContent = CONFIG.welcome_message || "";
+  const input = document.getElementById("nameInput"), btn = document.getElementById("startBtn");
+  input.addEventListener("input", () => { btn.disabled = input.value.trim().length < 2; });
+  btn.addEventListener("click", () => {
+    state.name = input.value.trim();
+    state.avatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    saveState();
+    showGame();
+  });
+  input.addEventListener("keydown", e => { if (e.key === "Enter" && !btn.disabled) btn.click(); });
 }
 
-function updateStats(){
-  const c=state.completedIds.length,t=STATIONS.length,p=t?Math.round(c/t*100):0;
-  const stats={completed:c,completedIds:state.completedIds,perfectAnswers:state.perfectAnswers,total:t};
-  document.getElementById("statXP").textContent=state.xp;
-  document.getElementById("statStations").textContent=`${c}/${t}`;
-  document.getElementById("statBadges").textContent=BADGES_DEF.filter(b=>evalBadge(b,stats)).length;
-  document.getElementById("progressPct").textContent=`${p}%`;
-  document.getElementById("progressFill").style.width=`${p}%`;
+// ===== GAME =====
+function showGame() {
+  document.getElementById("welcomeScreen").style.display = "none";
+  document.getElementById("gameScreen").style.display = "block";
+  document.getElementById("gameTitle").textContent = CONFIG.title || "Onboarding Quest";
+  document.getElementById("gameSub").textContent = CONFIG.subtitle || "";
+  document.getElementById("playerName").textContent = state.name;
+  document.getElementById("playerAvatar").textContent = state.avatar;
+  updateStats(); renderStations(); renderBadges();
+
+  // Si arrivé via ?station=X (QR scanné avec la caméra native du tel)
+  const sid = parseInt(new URLSearchParams(location.search).get("station"));
+  if (sid && STATIONS.find(s => s.id === sid)) {
+    // Marquer comme scanné aussi
+    if (!state.scannedIds.includes(sid)) {
+      state.scannedIds.push(sid);
+      saveState();
+      renderStations();
+    }
+    setTimeout(() => openQuiz(sid), 400);
+  }
 }
 
-function renderStations(){
-  document.getElementById("stationsGrid").innerHTML=STATIONS.map(s=>{
-    const d=state.completedIds.includes(s.id);
-    return`<div class="station-card ${d?'completed':''}" onclick="openQuiz(${s.id})"><div class="station-icon">${s.icon}</div><div class="station-details"><div class="station-name">${s.name}</div><div class="station-hint">${s.hint}</div></div>${d?'<div style="font-size:1.2rem">✅</div>':`<div class="station-xp">+${s.xp} XP</div>`}</div>`;
+// ===== STATS =====
+function updateStats() {
+  const c = state.completedIds.length, t = STATIONS.length, p = t ? Math.round(c / t * 100) : 0;
+  const stats = { completed: c, completedIds: state.completedIds, perfectAnswers: state.perfectAnswers, total: t };
+  document.getElementById("statXP").textContent = state.xp;
+  document.getElementById("statStations").textContent = `${c}/${t}`;
+  document.getElementById("statBadges").textContent = BADGES_DEF.filter(b => evalBadge(b, stats)).length;
+  document.getElementById("progressPct").textContent = `${p}%`;
+  document.getElementById("progressFill").style.width = `${p}%`;
+}
+
+// ===== RENDER STATIONS (3 états : locked / scanned / completed) =====
+function renderStations() {
+  document.getElementById("stationsGrid").innerHTML = STATIONS.map(s => {
+    const done = state.completedIds.includes(s.id);
+    const scanned = state.scannedIds.includes(s.id);
+
+    let cls = "";
+    let rightSide = "";
+
+    if (done) {
+      cls = "completed";
+      rightSide = '<div style="font-size:1.2rem">✅</div>';
+    } else if (scanned) {
+      cls = "scanned";
+      rightSide = `<div class="station-xp">+${s.xp} XP</div>`;
+    } else {
+      cls = "locked";
+      rightSide = '<div class="station-lock">🔒</div>';
+    }
+
+    return `<div class="station-card ${cls}" onclick="onStationClick(${s.id})">
+      <div class="station-icon">${s.icon}</div>
+      <div class="station-details">
+        <div class="station-name">${s.name}</div>
+        <div class="station-hint">${scanned || done ? s.hint : '📷 Scanne le QR code pour débloquer'}</div>
+      </div>
+      ${rightSide}
+    </div>`;
   }).join('');
 }
 
-function renderBadges(){
-  const stats={completed:state.completedIds.length,completedIds:state.completedIds,perfectAnswers:state.perfectAnswers,total:STATIONS.length};
-  document.getElementById("badgesRow").innerHTML=BADGES_DEF.map(b=>`<div class="badge ${evalBadge(b,stats)?'earned':'locked'}" title="${b.desc}">${b.icon}<div class="badge-label">${b.label}</div></div>`).join('');
-}
+// ===== CLICK SUR UNE STATION =====
+function onStationClick(sid) {
+  const scanned = state.scannedIds.includes(sid);
+  const done = state.completedIds.includes(sid);
 
-function openQuiz(sid){
-  const s=STATIONS.find(x=>x.id===sid);if(!s)return;
-  const modal=document.getElementById("quizModal"),qc=document.getElementById("quizContent"),rs=document.getElementById("resultScreen");
-  if(state.completedIds.includes(sid)){
-    document.getElementById("modalIcon").textContent=s.icon;document.getElementById("modalStationName").textContent=s.name;
-    document.getElementById("modalLore").textContent=s.lore;document.getElementById("modalQuestion").textContent="✅ Station déjà validée !";
-    document.getElementById("answersList").innerHTML=`<div style="text-align:center;color:var(--accent-green);padding:10px;">Bravo, déjà complétée !</div>`;
-    qc.style.display="block";rs.classList.remove("active");modal.classList.add("active");return;
+  if (!scanned && !done) {
+    showToast("🔒 Scanne d'abord le QR code de cette station !");
+    return;
   }
-  document.getElementById("modalIcon").textContent=s.icon;document.getElementById("modalStationName").textContent=s.name;
-  document.getElementById("modalLore").textContent=s.lore;document.getElementById("modalQuestion").textContent=s.question;
-  const k=["A","B","C","D"];
-  document.getElementById("answersList").innerHTML=s.answers.map((a,i)=>`<button class="answer-btn" onclick="submitAnswer(${sid},${i})"><span class="answer-key">${k[i]}</span>${a}</button>`).join('');
-  qc.style.display="block";rs.classList.remove("active");modal.classList.add("active");
+  openQuiz(sid);
 }
 
-function submitAnswer(sid,ai){
-  const s=STATIONS.find(x=>x.id===sid);if(!s||state.completedIds.includes(sid))return;
-  const btns=document.querySelectorAll(".answer-btn"),ok=ai===s.correct;
-  if(!state.attempts[sid])state.attempts[sid]=0;state.attempts[sid]++;
-  btns.forEach((b,i)=>{b.style.pointerEvents="none";if(i===s.correct)b.classList.add("correct");else if(i===ai&&!ok)b.classList.add("wrong");});
-  setTimeout(()=>{
-    if(ok){
-      const ft=state.attempts[sid]===1,bxp=ft?25:0,txp=s.xp+bxp;
-      state.completedIds.push(sid);state.xp+=txp;if(ft)state.perfectAnswers++;saveState();
-      document.getElementById("quizContent").style.display="none";
-      const r=document.getElementById("resultScreen");r.classList.add("active");
-      document.getElementById("resultIcon").textContent=ft?"🌟":"✅";
-      document.getElementById("resultTitle").textContent=ft?"Parfait !":"Bien joué !";
-      document.getElementById("resultSubtitle").textContent=ft?"Bonne réponse du premier coup !":"Tu as trouvé la bonne réponse !";
-      document.getElementById("resultXP").innerHTML=`⭐ +${txp} XP ${ft?'<span style="color:var(--accent-green)">(+25 bonus)</span>':''}`;
-      if(state.completedIds.length===STATIONS.length)setTimeout(showCompletion,600);
-    }else{setTimeout(()=>{btns.forEach(b=>{b.classList.remove("wrong","correct");b.style.pointerEvents="auto";});},800);}
-  },600);
+// ===== BADGES =====
+function renderBadges() {
+  const stats = { completed: state.completedIds.length, completedIds: state.completedIds, perfectAnswers: state.perfectAnswers, total: STATIONS.length };
+  document.getElementById("badgesRow").innerHTML = BADGES_DEF.map(b =>
+    `<div class="badge ${evalBadge(b, stats) ? 'earned' : 'locked'}" title="${b.desc}">${b.icon}<div class="badge-label">${b.label}</div></div>`
+  ).join('');
 }
 
-function closeModal(){
-  document.getElementById("quizModal").classList.remove("active");updateStats();renderStations();renderBadges();
-  const u=new URL(location);u.searchParams.delete("station");history.replaceState({},"",u);
-}
-function showCompletion(){
-  closeModal();setTimeout(()=>{
-    document.getElementById("completionName").textContent=state.name;
-    document.getElementById("completionXP").textContent=`⭐ ${state.xp} XP total`;
-    document.getElementById("completionModal").classList.add("active");launchConfetti();
-  },300);
-}
-function launchConfetti(){
-  const c=document.createElement("div");c.className="confetti";document.body.appendChild(c);
-  const cols=["#f72585","#7209b7","#4cc9f0","#ffd166","#06d6a0","#f77f00"];
-  for(let i=0;i<60;i++){const p=document.createElement("div");p.className="confetti-piece";p.style.left=Math.random()*100+"%";p.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];p.style.animationDelay=Math.random()*1.5+"s";p.style.animationDuration=(2+Math.random()*2)+"s";p.style.width=(6+Math.random()*8)+"px";p.style.height=(6+Math.random()*8)+"px";c.appendChild(p);}
-  setTimeout(()=>c.remove(),5000);
+// ===== QUIZ =====
+function openQuiz(sid) {
+  const s = STATIONS.find(x => x.id === sid);
+  if (!s) return;
+  const modal = document.getElementById("quizModal"), qc = document.getElementById("quizContent"), rs = document.getElementById("resultScreen");
+
+  if (state.completedIds.includes(sid)) {
+    document.getElementById("modalIcon").textContent = s.icon;
+    document.getElementById("modalStationName").textContent = s.name;
+    document.getElementById("modalLore").textContent = s.lore;
+    document.getElementById("modalQuestion").textContent = "✅ Station déjà validée !";
+    document.getElementById("answersList").innerHTML = `<div style="text-align:center;color:var(--accent-green);padding:10px;">Bravo, déjà complétée !</div>`;
+    qc.style.display = "block"; rs.classList.remove("active"); modal.classList.add("active");
+    return;
+  }
+
+  // Vérifier que la station a été scannée
+  if (!state.scannedIds.includes(sid)) {
+    showToast("🔒 Scanne d'abord le QR code de cette station !");
+    return;
+  }
+
+  document.getElementById("modalIcon").textContent = s.icon;
+  document.getElementById("modalStationName").textContent = s.name;
+  document.getElementById("modalLore").textContent = s.lore;
+  document.getElementById("modalQuestion").textContent = s.question;
+  const k = ["A", "B", "C", "D"];
+  document.getElementById("answersList").innerHTML = s.answers.map((a, i) =>
+    `<button class="answer-btn" onclick="submitAnswer(${sid},${i})"><span class="answer-key">${k[i]}</span>${a}</button>`
+  ).join('');
+  qc.style.display = "block"; rs.classList.remove("active"); modal.classList.add("active");
 }
 
-document.getElementById("modalClose").addEventListener("click",closeModal);
-document.getElementById("resultContinue").addEventListener("click",closeModal);
-document.getElementById("completionClose").addEventListener("click",()=>document.getElementById("completionModal").classList.remove("active"));
-document.getElementById("resetBtn").addEventListener("click",()=>{if(confirm("Réinitialiser toute ta progression ?")){state=defaultState();localStorage.removeItem("onboarding_quest");location.reload();}});
-document.getElementById("quizModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeModal();});
+// ===== SUBMIT ANSWER =====
+function submitAnswer(sid, ai) {
+  const s = STATIONS.find(x => x.id === sid);
+  if (!s || state.completedIds.includes(sid)) return;
+  const btns = document.querySelectorAll(".answer-btn"), ok = ai === s.correct;
+  if (!state.attempts[sid]) state.attempts[sid] = 0;
+  state.attempts[sid]++;
+  btns.forEach((b, i) => { b.style.pointerEvents = "none"; if (i === s.correct) b.classList.add("correct"); else if (i === ai && !ok) b.classList.add("wrong"); });
+  setTimeout(() => {
+    if (ok) {
+      const ft = state.attempts[sid] === 1, bxp = ft ? 25 : 0, txp = s.xp + bxp;
+      state.completedIds.push(sid); state.xp += txp; if (ft) state.perfectAnswers++;
+      saveState();
+      document.getElementById("quizContent").style.display = "none";
+      const r = document.getElementById("resultScreen"); r.classList.add("active");
+      document.getElementById("resultIcon").textContent = ft ? "🌟" : "✅";
+      document.getElementById("resultTitle").textContent = ft ? "Parfait !" : "Bien joué !";
+      document.getElementById("resultSubtitle").textContent = ft ? "Bonne réponse du premier coup !" : "Tu as trouvé la bonne réponse !";
+      document.getElementById("resultXP").innerHTML = `⭐ +${txp} XP ${ft ? '<span style="color:var(--accent-green)">(+25 bonus)</span>' : ''}`;
+      if (state.completedIds.length === STATIONS.length) setTimeout(showCompletion, 600);
+    } else {
+      setTimeout(() => { btns.forEach(b => { b.classList.remove("wrong", "correct"); b.style.pointerEvents = "auto"; }); }, 800);
+    }
+  }, 600);
+}
 
+// ===== CLOSE MODAL =====
+function closeModal() {
+  document.getElementById("quizModal").classList.remove("active");
+  updateStats(); renderStations(); renderBadges();
+  const u = new URL(location); u.searchParams.delete("station"); history.replaceState({}, "", u);
+}
+
+// ===== COMPLETION =====
+function showCompletion() {
+  closeModal();
+  setTimeout(() => {
+    document.getElementById("completionName").textContent = state.name;
+    document.getElementById("completionXP").textContent = `⭐ ${state.xp} XP total`;
+    document.getElementById("completionModal").classList.add("active");
+    launchConfetti();
+  }, 300);
+}
+
+function launchConfetti() {
+  const c = document.createElement("div"); c.className = "confetti"; document.body.appendChild(c);
+  const cols = ["#f72585", "#7209b7", "#4cc9f0", "#ffd166", "#06d6a0", "#f77f00"];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement("div"); p.className = "confetti-piece";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.backgroundColor = cols[Math.floor(Math.random() * cols.length)];
+    p.style.animationDelay = Math.random() * 1.5 + "s";
+    p.style.animationDuration = (2 + Math.random() * 2) + "s";
+    p.style.width = (6 + Math.random() * 8) + "px";
+    p.style.height = (6 + Math.random() * 8) + "px";
+    c.appendChild(p);
+  }
+  setTimeout(() => c.remove(), 5000);
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("resultContinue").addEventListener("click", closeModal);
+document.getElementById("completionClose").addEventListener("click", () => document.getElementById("completionModal").classList.remove("active"));
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("Réinitialiser toute ta progression ?")) {
+    state = defaultState();
+    localStorage.removeItem("onboarding_quest");
+    location.reload();
+  }
+});
+document.getElementById("quizModal").addEventListener("click", e => { if (e.target === e.currentTarget) closeModal(); });
+
+// ===== GO =====
 init();
 </script>
 </body>
