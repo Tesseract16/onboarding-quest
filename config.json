@@ -9,7 +9,7 @@
       "icon": "🚪",
       "hint": "A l'entrée du magasin, repère la sortie ",
       "lore": "La porte de secours est un élément essentiel de la sécurité. Elle ne doit jamais être bloquée ni encombrée. En cas d'évacuation, c'est par ici que tout le monde sort !",
-      "question": "Que signifie “URL” ?",
+      "question": "Que signifie "URL" ?",
       "answers": [
         "Un logiciel",
         "Une adresse web",
@@ -25,7 +25,7 @@
       "icon": "👥",
       "hint": "Au rez-de-chaussée, lis les infos",
       "lore": "Dans une petite équipe, tout le monde compte ! Le tableau d'équipe affiche les infos importantes et les contacts utiles. Prends l'habitude de le consulter régulièrement.",
-      "question": "Quel composant permet de voir les images à l’écran ?",
+      "question": "Quel composant permet de voir les images à l'écran ?",
       "answers": [
         "CPU",
         "RAM",
@@ -52,19 +52,19 @@
       "xp": 50
     },
     {
-      "id": 4,
-      "name": "Le point sécurité",
-      "icon": "🧯",
-      "hint": "En haut de l'escalier, repère les extincteurs",
-      "lore": "La sécurité c'est l'affaire de tous ! En cas d'urgence (incendie, accident…), il faut savoir où sont les extincteurs, les sorties de secours et la trousse de premiers soins. Garde donc ces informations en tête. ",
-      "question": "L'alarme incendie se déclenche. Que fais-tu en premier ?",
+      "id": 6,
+      "name": "L'étiqueteuse",
+      "icon": "🏷️",
+      "hint": "Sur le bureau au SAV, imprime ton prénom x2",
+      "lore": "L'étiqueteuse te permet de créer des étiquettes personnalisées (surtout pour le matériel des clients). Imprime 2 exemplaires de ton prénom : un pour ton casier, et un à mettre sur ton badge. C'est ta première mission pratique !",
+      "question": "Que signifie "HTTP" (dans une adresse web) ?",
       "answers": [
-        "Tu prends tes affaires et tu descends tranquillement",
-        "Tu arrêtes tout, tu te diriges vers la sortie de secours et tu rejoins le point de rassemblement",
-        "Tu appelles les pompiers depuis ton poste",
-        "Tu essaies d'éteindre le feu avec l'extincteur"
+        "Un protocole de communication",
+        "Un logiciel",
+        "Un antivirus",
+        "Un moteur de recherche"
       ],
-      "correct": 1,
+      "correct": 0,
       "xp": 50
     },
     {
@@ -81,22 +81,6 @@
         "Dire au client qu'il sera prêt demain"
       ],
       "correct": 1,
-      "xp": 50
-    },
-    {
-      "id": 6,
-      "name": "L'étiqueteuse",
-      "icon": "🏷️",
-      "hint": "Sur le bureau au SAV, imprime ton prénom x2",
-      "lore": "L'étiqueteuse te permet de créer des étiquettes personnalisées (surtout pour le matériel des clients). Imprime 2 exemplaires de ton prénom : un pour ton casier, et un à mettre sur ton badge. C'est ta première mission pratique !",
-      "question": "Que signifie “HTTP” (dans une adresse web) ?",
-      "answers": [
-        "Un protocole de communication",
-        "Un logiciel",
-        "Un antivirus",
-        "Un moteur de recherche"
-      ],
-      "correct": 0,
       "xp": 50
     },
     {
@@ -125,8 +109,24 @@
       "answers": [
         "Stocker définitivement les données",
         "Garder les données temporaires",
-        "Refroidir l’ordinateur",
+        "Refroidir l'ordinateur",
         "Se connecter à internet"
+      ],
+      "correct": 1,
+      "xp": 50
+    },
+    {
+      "id": 4,
+      "name": "Le point sécurité",
+      "icon": "🧯",
+      "hint": "En haut de l'escalier, repère les extincteurs",
+      "lore": "La sécurité c'est l'affaire de tous ! En cas d'urgence (incendie, accident…), il faut savoir où sont les extincteurs, les sorties de secours et la trousse de premiers soins. Garde donc ces informations en tête. ",
+      "question": "L'alarme incendie se déclenche. Que fais-tu en premier ?",
+      "answers": [
+        "Tu prends tes affaires et tu descends tranquillement",
+        "Tu arrêtes tout, tu te diriges vers la sortie de secours et tu rejoins le point de rassemblement",
+        "Tu appelles les pompiers depuis ton poste",
+        "Tu essaies d'éteindre le feu avec l'extincteur"
       ],
       "correct": 1,
       "xp": 50
@@ -140,7 +140,7 @@
       "question": "Plus un ordinateur a de RAM :",
       "answers": [
         "Plus il est lourd",
-        "Plus l’écran est grand",
+        "Plus l'écran est grand",
         "Plus il consomme internet",
         "Plus il est rapide pour plusieurs tâches"
       ],
